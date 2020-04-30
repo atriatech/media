@@ -6,9 +6,10 @@ You can use this package to upload your media and attach the media to your model
 
 1. `composer require atriatech/media`.
 2. add `Atriatech\Media\MediaServiceProvider::class` to `providers` array inside `config/app.php`.
-3. run `php artisan vendor:publish --tag=atriatech-media-config` to copy the config file into `config` folder.
-4. run `php artisan vendor:publish --tag=atriatech-media-public` to copy asset files into `public` folder, running this command with `--force` flag is recommended.
-5. run `php artisan migrate` to create the tables.
+3. add `"Atriatech\\Media\\": "vendor/atriatech/media/src/"` to `autoload => psr-4` object inside `composer.json` file, then run this command: `composer dump-autoload`.
+4. run `php artisan vendor:publish --tag=atriatech-media-config` to copy the config file into `config` folder.
+5. run `php artisan vendor:publish --tag=atriatech-media-public` to copy asset files into `public` folder, running this command with `--force` flag is recommended.
+6. run `php artisan migrate` to create the tables.
 
 # API
 
