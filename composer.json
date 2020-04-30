@@ -1,6 +1,6 @@
 {
     "name": "atriatech/media",
-    "description": "Explore, Upload, Delete and Create new folder",
+    "description": "Explore, Upload, Delete and Create new folder in your laravel project",
     "authors": [
         {
             "name": "Reza Tayebi",
@@ -11,5 +11,6 @@
     "require": {
         "intervention/image": "^2.5"
     },
-    "keywords": ["image", "media", "media-explorer", "upload", "resize"]
+    "keywords": ["image", "media", "media-explorer", "upload", "resize"],
+    "license": "MIT"
 }
