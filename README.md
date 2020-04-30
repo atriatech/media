@@ -86,6 +86,6 @@ The `@atriatech_media_file` directive has two parameters:
 }
 ```
 
-#Issue
+#Issues
 
 Please feel free to open an issue.
