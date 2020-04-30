@@ -1,0 +1,15 @@
+{
+    "name": "atriatech/media",
+    "description": "Explore, Upload, Delete and Create new folder",
+    "authors": [
+        {
+            "name": "Reza Tayebi",
+            "email": "reza.tayebi73@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "intervention/image": "^2.5"
+    },
+    "keywords": ["image", "media", "media-explorer", "upload", "resize"]
+}

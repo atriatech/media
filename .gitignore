@@ -1,0 +1,4 @@
+/node_modules
+composer.lock
+mix-manifest.json
+/.idea
