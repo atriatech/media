@@ -1,7 +1,9 @@
 # Media - Explore, Upload, Delete and Create new folder
+
 You can use this package to upload your media and attach the media to your models.
 
 # Installation
+
 1. `composer require atriatech/media`.
 2. add `Atriatech\Media\MediaServiceProvider::class` to `providers` array inside `config/app.php`.
 3. run `php artisan vendor:publish --tag=atriatech-media-config` to copy the config file into `config` folder.
@@ -9,6 +11,7 @@ You can use this package to upload your media and attach the media to your model
 5. run `php artisan migrate` to create the tables.
 
 # API
+
 You can use these methods on your model:
 
 | Method | Parameters | Description | Example |
@@ -25,6 +28,7 @@ $medium->getSubSize('thumbnail');
 ```
 
 # Usage
+
 First, take A look at the `atriatech_media.php` file in `config` folder.
  
 Add `AtriatechMedia` to your model
@@ -83,4 +87,5 @@ The `@atriatech_media_file` directive has two parameters:
 ```
 
 #Issue
+
 Please feel free to open an issue.
