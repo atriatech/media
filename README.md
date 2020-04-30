@@ -85,7 +85,3 @@ The `@atriatech_media_file` directive has two parameters:
     "file": "(String)" // Current media path to show in media selector
 }
 ```
-
-#Issues
-
-Please feel free to open an issue.
