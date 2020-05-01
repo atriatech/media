@@ -1,3 +1,5 @@
+![Media - Explore, Upload, Delete and Create new folder](https://raw.githubusercontent.com/atriatech/media/master/screenshot.png)
+
 # Media - Explore, Upload, Delete and Create new folder
 
 You can use this package to upload your media and attach the media to your models.
