@@ -12,6 +12,5 @@
         "intervention/image": "^2.5"
     },
     "keywords": ["image", "media", "media-explorer", "upload", "resize"],
-    "license": "MIT",
-    "version": "1.0.0"
+    "license": "MIT"
 }
