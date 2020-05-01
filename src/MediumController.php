@@ -107,15 +107,19 @@ class MediumController extends Controller
             if (Storage::exists($item)) {
                 $this->rrmdir(ltrim(Storage::url($item), '/'));
             } else {
-                $media = Medium::path($item)->first();
+                $media = Medium::path([$item])->first();
                 if (!empty($media)) {
                     $attributes = $media->getAttributes();
                     $item_path[] = $attributes['path'];
                     if (strpos($media->mime_type, 'image/') !== false) {
                         $options = json_decode($attributes['options']);
-                        $subSizes = (array)$options->subSizes;
-                        foreach ($subSizes as $index => $subSize) {
-                            $item_path[] = $subSize;
+                        if (!empty($options)) {
+                            $subSizes = (array)$options->subSizes;
+                            if (!empty($subSizes)) {
+                                foreach ($subSizes as $index => $subSize) {
+                                    $item_path[] = $subSize;
+                                }
+                            }
                         }
                     }
                     $media->delete();
@@ -155,7 +159,7 @@ class MediumController extends Controller
             }
             Storage::move($item, $newPath);
         } else {
-            $medium = Medium::path($item)->first();
+            $medium = Medium::path([$item])->first();
 
             $attributes = $medium->getAttributes();
             $newPath = str_replace(pathinfo($attributes['path'], PATHINFO_FILENAME), $newName, $attributes['path']);
