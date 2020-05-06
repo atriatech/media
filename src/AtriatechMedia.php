@@ -13,24 +13,40 @@ trait AtriatechMedia
 	{
 		$media = [];
 		if (!empty($paths)) {
-			$allMedia = Medium::path($paths)->get();
-			foreach($allMedia as $medium) {
-                $media[] = $medium->id;
+		    if (empty($paths[0])) {
+                $paths = [$paths];
             }
+
+            $allMedia = Medium::path($paths)->get();
+
+            foreach ($allMedia as $medium) {
+                $index = array_search($medium->path, array_column($paths, 'path'));
+                if ($index !== false) {
+                    $media[$medium->id] = ['name' => $paths[$index]['key']];
+                }
+            }
+            $this->media()->attach($media);
 		}
-		$this->media()->attach($media);
 	}
 
 	public function updateMedia($paths)
 	{
 		$media = [];
         if (!empty($paths)) {
-            $allMedia = Medium::path($paths)->get();
-            foreach($allMedia as $medium) {
-                $media[] = $medium->id;
+            if (empty($paths[0])) {
+                $paths = [$paths];
             }
+
+            $allMedia = Medium::path($paths)->get();
+
+            foreach ($allMedia as $medium) {
+                $index = array_search($medium->path, array_column($paths, 'path'));
+                if ($index !== false) {
+                    $media[$medium->id] = ['name' => $paths[$index]['key']];
+                }
+            }
+		    $this->media()->sync($media);
         }
-		$this->media()->sync($media);
 	}
 
 	public function getMedia()
@@ -41,5 +57,14 @@ trait AtriatechMedia
     public function getMedium($id = NULL)
     {
         return (!empty($id)) ? $this->media()->find($id) : $this->media()->first();
+    }
+
+    public function getMediumByName($name = NULL)
+    {
+        if (!empty($name)) {
+            return $this->media()->wherePivot('name', '=', $name)->first();
+        } else {
+            return $this->media()->first();
+        }
     }
 }
