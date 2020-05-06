@@ -20,7 +20,7 @@ You can use these methods on your model:
 
 | Method | Parameters | Description | Example |
 | ------ | ---------- | ----------- | ------- |
-| addMedia | $paths - (Array) | Add media to your model | `User::findOrFail(1)->addMedia([$request->input('image')])` |
+| addMedia | $paths - (Single-Array) | Add media to your model | `User::findOrFail(1)->addMedia([$request->input('image')])` |
 | updateMedia | $paths - (Array) | Update media for your mobile | `User::findOrFail(1)->updateMedia([$request->input('image')])` |
 | getMedia | - | Return all the media for your model | `$media = User::findOrFail(1)->getMedia()` |
 | getMedium | $id - (Integer) | Get a single medium of your model with an id, If id is empty it will return the first medium | `$medium = User::findOrFail(1)->getMedium(2)` |
