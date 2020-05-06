@@ -6,8 +6,9 @@ const loadMediaSelector = function() {
 		const id = $(item).attr('id');
         $(item).replaceWith(`
             <div class="media-item">
+                <input type="hidden" name="${options.name}[key]" value="${options.name}">
                 <div id="${id}" data-options='${JSON.stringify(options)}' class="file-viewer open-media-dialog">${((options.file === undefined || options.file === '') ? options.placeholder : '<img src="' + options.file + '">')}</div>
-                <input type="hidden" name="${options.name}" value="${((options.file !== undefined) ? options.file : '')}">
+                <input type="hidden" name="${options.name}[path]" value="${((options.file !== undefined) ? options.file : '')}">
                 <div class="delete-file ${((options.file === undefined || options.file === '') ? 'atm-none' : '')}" data-options='${JSON.stringify(options)}'><i class="material-icons mdc-button__icon">delete</i></div>
                 <div class="file-name ${((options.file === undefined || options.file === '') ? 'atm-none' : '')}">${(options.file === undefined || options.file === '') ? '' : options.file.split('/').pop()}</div>
             </div>

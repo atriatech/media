@@ -19,6 +19,7 @@ class CreateMediumItemsTable extends Migration
             $table->collation = 'utf8_general_ci';
 
             $table->bigIncrements('id');
+            $table->string('name');
             $table->unsignedBigInteger('medium_id');
             $table->morphs('media_item');
 
