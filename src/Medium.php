@@ -19,7 +19,7 @@ class Medium extends Model
         if (!empty($paths)) {
             $newPaths = [];
             foreach($paths as $path) {
-                $newPaths[] = str_replace(url('/') . '/' . 'storage/', 'public/', $path);
+                $newPaths[] = str_replace(url('/') . '/' . 'storage/', 'public/', $path['path']);
             }
             return $query->whereIn('path', $newPaths);
         }
