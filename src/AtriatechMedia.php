@@ -49,6 +49,23 @@ trait AtriatechMedia
         }
 	}
 
+	public function removeMedia($name)
+    {
+        $media = [];
+
+        if (is_array($name)) {
+            $allMedia = $this->getMediumByName($name);
+            foreach ($allMedia as $medium) {
+                $media[] = $medium->id;
+            }
+        } else {
+            $medium = $this->getMediumByName($name);
+            $media[] = $medium->id;
+        }
+
+        $this->media()->detach($media);
+    }
+
 	public function getMedia()
     {
         return $this->media()->get();
@@ -62,7 +79,11 @@ trait AtriatechMedia
     public function getMediumByName($name = NULL)
     {
         if (!empty($name)) {
-            return $this->media()->wherePivot('name', '=', $name)->first();
+            if (is_array($name)) {
+                return $this->media()->whereIn('name', $name)->get();
+            } else {
+                return $this->media()->wherePivot('name', '=', $name)->first();
+            }
         } else {
             return $this->media()->first();
         }
