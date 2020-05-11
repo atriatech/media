@@ -21,10 +21,11 @@ You can use these methods on your model:
 | Method | Parameters | Description | Example |
 | ------ | ---------- | ----------- | ------- |
 | addMedia | $paths - (Single-Array) | Add media to your model | `User::findOrFail(1)->addMedia([$request->input('image')])` |
-| updateMedia | $paths - (Array) | Update media for your mobile | `User::findOrFail(1)->updateMedia([$request->input('image')])` |
+| updateMedia | $paths - (Array) | Update media for your model | `User::findOrFail(1)->updateMedia([$request->input('image')])` |
+| removeMedia | $name - (Single-Array) | Remove media from your model | `User::findOrFail(1)->removeMedia('image')` |
 | getMedia | - | Return all the media for your model | `$media = User::findOrFail(1)->getMedia()` |
 | getMedium | $id - (Integer) | Get a single medium of your model with an id, If id is empty it will return the first medium | `$medium = User::findOrFail(1)->getMedium(2)` |
-| getMediumByName | $name - (String) | Get a single medium of your model with the name, If the name is empty it will return the first medium | `$medium = User::findOrFail(1)->getMediumByName('image')` |
+| getMediumByName | $name - (Single-Array) | Get a single medium of your model with the name, If the name is empty it will return the first medium | `$medium = User::findOrFail(1)->getMediumByName('image')` |
 
 There is a `getSubSize` method for a single medium which you can get a specific subSize (that you defined in the config file) of an image, using below code:
 
