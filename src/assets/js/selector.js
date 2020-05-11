@@ -7,12 +7,16 @@ const loadMediaSelector = function() {
         $(item).replaceWith(`
             <div class="media-item">
                 <input type="hidden" name="${options.name}[key]" value="${options.name}">
-                <div id="${id}" data-options='${JSON.stringify(options)}' class="file-viewer open-media-dialog">${((options.file === undefined || options.file === '') ? options.placeholder : '<img src="' + options.file + '">')}</div>
-                <input type="hidden" name="${options.name}[path]" value="${((options.file !== undefined) ? options.file : '')}">
-                <div class="delete-file ${((options.file === undefined || options.file === '') ? 'atm-none' : '')}" data-options='${JSON.stringify(options)}'><i class="material-icons mdc-button__icon">delete</i></div>
-                <div class="file-name ${((options.file === undefined || options.file === '') ? 'atm-none' : '')}">${(options.file === undefined || options.file === '') ? '' : options.file.split('/').pop()}</div>
+                <div id="${id}" data-options='${JSON.stringify(options)}' class="file-viewer open-media-dialog">${options.placeholder}</div>
+                <input type="hidden" name="${options.name}[path]" value="">
+                <div class="delete-file atm-none" data-options='${JSON.stringify(options)}'><i class="material-icons mdc-button__icon">delete</i></div>
+                <div class="file-name atm-none"></div>
             </div>
         `);
+
+        if (options.file !== undefined && options.file !== '') {
+            mediaManager(id, options.file);
+        }
 
 		$('.media-container').find('.delete-file').each(function (index2, item2) {
 			$(item2).click(function () {
