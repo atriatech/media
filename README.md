@@ -92,7 +92,7 @@ The `@atriatech_media_file` directive has two parameters:
 }
 ```
 
-### Load with JS
+## Load with JS
 
 If you want to load the selector with javascript use the instruction below:
 
