@@ -67,6 +67,23 @@ $('body').delegate('.open-media-dialog', 'click', function () {
 	window.open(route('atriatech.media.index') + '?ref=media&refId=' + id + '&accept=' + accept, '', 'height=500,width=1200');
 });
 
+function loadMediaSelectorWithJS(id, options, noContainer = true) {
+    let html = '';
+    if (!noContainer) {
+        html += '<div class="media-container">';
+    }
+    html += '<div id="' + id + '" data-plugin="media" data-options=' + JSON.stringify(options) + '></div>';
+    if (!noContainer) {
+        html += '</div>';
+    }
+    $('#'+id).replaceWith(html);
+    loadMediaSelector();
+}
+
 $(document).ready(function() {
 	loadMediaSelector();
 });
+
+module.exports = {
+    loadMediaSelectorWithJS,
+};
