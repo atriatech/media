@@ -91,3 +91,25 @@ The `@atriatech_media_file` directive has two parameters:
     "file": "(String)" // Current media path to show in media selector
 }
 ```
+
+### Load with JS
+
+If you want to load the selector with javascript use the instruction below:
+
+add this inside or outside the media selector blade directives.
+```html
+@atriatech_media_start
+<div id="mp3"></div>
+@atriatech_media_end
+
+<!-- OR -->
+
+<div id="mp3"></div>
+```
+
+then load the selector with this code
+```js
+AtriatechMedia.loadMediaSelectorWithJS('mp3', {name: 'mp3', placeholder: 'MP3', accept: '.mp3'});
+```
+
+The parameters of `loadMediaSelectorWithJS` method are exactly like `@atriatech_media_file` directive. It only has a third parameter that get `true` or `false`. you should pass `false` if you want to add that `div` element outside the media selector blade directives.
