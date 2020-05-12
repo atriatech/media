@@ -6,6 +6,13 @@ mix.setPublicPath('./dist');
 
 rimraf.sync("./dist");
 
+mix.webpackConfig({
+    output: {
+        libraryTarget: 'var',
+        library: 'AtriatechMedia'
+    }
+});
+
 mix.js(__dirname + '/src/assets/js/app.js', 'js/media.js');
 mix.js(__dirname + '/src/assets/js/selector.js', 'js/media-selector.js');
 
