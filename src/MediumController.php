@@ -45,7 +45,7 @@ class MediumController extends Controller
             return $item;
         })->filter(function($item) use($accept) {
             if (!empty($accept)) {
-                if (in_array('.'.pathinfo($item->path, PATHINFO_EXTENSION), explode(',', $accept))) {
+                if (in_array('.'.pathinfo($item->path, PATHINFO_EXTENSION), explode(',', $accept)) || in_array($item->mime_type, explode(',', $accept))) {
                     return $item;
                 }
             } else {
