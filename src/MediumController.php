@@ -11,6 +11,9 @@ class MediumController extends Controller
 {
     public function index()
     {
+        if (!Storage::exists('public' . '/' . config('atriatech_media.upload_folder'))) {
+            Storage::makeDirectory('public' . '/' . config('atriatech_media.upload_folder'));
+        }
         return view('atriatech_media::index');
     }
 
@@ -33,7 +36,7 @@ class MediumController extends Controller
         $path = $request->input('path');
         $accept = $request->input('accept');
         if (empty($path)) {
-            $path = '';
+            $path = 'public/' . config('atriatech_media.upload_folder');
         }
         $dirs = $this->getDirectories($path);
 
@@ -54,14 +57,14 @@ class MediumController extends Controller
         });
         $files = array_values($files->toArray());
 
-        $breadcrumb = ['root'];
+        $breadcrumb = [];
         if (!empty($path)) {
-            $breadcrumb = array_merge($breadcrumb, explode('/', $path));
+            $breadcrumb = array_merge($breadcrumb, explode('/', mb_substr($path, 7)));
         }
         $bbs = [];
         foreach($breadcrumb as $index => $b) {
-            if ($b == 'root') {
-                $bbs[] = ['path' => '', 'name' => 'Root'];
+            if ($b == 'public') {
+                $bbs[] = ['path' => '', 'name' => 'Public'];
             } else {
                 $bb = $breadcrumb;
                 $bb = array_splice($bb, 1, $index);
@@ -107,7 +110,7 @@ class MediumController extends Controller
             if (Storage::exists($item)) {
                 $this->rrmdir(ltrim(Storage::url($item), '/'));
             } else {
-                $media = Medium::path([$item])->first();
+                $media = Medium::path([['path' => $item]])->first();
                 if (!empty($media)) {
                     $attributes = $media->getAttributes();
                     $item_path[] = $attributes['path'];
@@ -231,7 +234,7 @@ class MediumController extends Controller
             $sizes = [];
             $mediaSubSizes = [];
             foreach($subSizes as $subSizeKey => $subSize) {
-                $image = Image::make($newPath . '/' . $fileName)->orientate();
+                $image = Image::make($newPath . $fileName)->orientate();
                 $width = $image->width();
                 $height = $image->height();
 
@@ -302,11 +305,11 @@ class MediumController extends Controller
             $objects = scandir($dir);
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
-                    if (is_dir($dir. DIRECTORY_SEPARATOR .$object) && !is_link($dir."/".$object)) {
-                        $this->rrmdir($dir . DIRECTORY_SEPARATOR . $object);
+                    if (is_dir($dir. '/' .$object) && !is_link($dir."/".$object)) {
+                        $this->rrmdir($dir . '/' . $object);
                     } else {
-                        Medium::where('path', 'public' . mb_substr(ltrim($dir . DIRECTORY_SEPARATOR . $object, './'), 7))->delete();
-                        unlink($dir . DIRECTORY_SEPARATOR . $object);
+                        Medium::where('path', 'public' . mb_substr(ltrim($dir . '/' . $object, './'), 7))->delete();
+                        unlink($dir . '/' . $object);
                     }
                 }
             }

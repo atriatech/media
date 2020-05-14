@@ -120,8 +120,8 @@ const breadcrumb = function (breadcrumb) {
 const getFiles = function (path = null) {
     $('input[name="accept"]').val(getUrlParam('accept'));
     $('#fileInput').attr('accept', getUrlParam('accept'));
-	if (path === null) {
-		path = '';
+	if (path === null || path === '') {
+		path = 'public/' + config.upload_folder;
 	}
 	currentPath = path;
 	$('input[name="path"]').val(currentPath);

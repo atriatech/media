@@ -75,7 +75,7 @@
         <nav>
             <ol class="breadcrumb mb-0 mdc-theme--primary-bg">
                 <li class="breadcrumb-item">
-                    <span class="mdc-theme--on-secondary">Root</span>
+                    <span class="mdc-theme--on-secondary">{{ config('atriatech_media.upload_folder') }}</span>
                 </li>
             </ol>
             <div class="data-loading d-none">
