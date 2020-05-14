@@ -7,7 +7,6 @@ return [
      * but if the crop option is set to true, the image will be cropped with the width and height provided.
      * you can add any size you want
      */
-
     'sub_sizes' => [
         'thumbnail' => [
             'width' => 150,
@@ -36,11 +35,13 @@ return [
      * you can add the extensions you want to each category. or add a new category
      * do not remove these default categories
      */
-
     'mime_types' => [
         'image/*' => '.jpg,.png,.jpeg,.bmp,.gif',
         'video/*' => '.mp4,.mov',
         'audio/*' => '.mp3',
         'other' => '.pdf,.zip'
-    ]
+    ],
+
+
+    'upload_folder' => 'media'
 ];
