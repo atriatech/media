@@ -29,7 +29,7 @@ Route::get('/js/atriatech_media_router.js', function () {
 
     header('Content-Type: text/javascript');
     echo ("let allMediaRoutes = JSON.parse('" . json_encode($routes) . "');
-    function route(name, parameters = null) {
+    function mediaRoute(name, parameters = null) {
         const r = allMediaRoutes.find(x => x.name === name);
         if (parameters) {
             let uri = r.uri;

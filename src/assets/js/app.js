@@ -139,7 +139,7 @@ const getFiles = function (path = null) {
 	$('.data-loading').removeClass('d-none');
 	$.ajax({
 		method: 'POST',
-		url: route('atriatech.media.getFiles'),
+		url: mediaRoute('atriatech.media.getFiles'),
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		},
@@ -369,7 +369,7 @@ $('#new_folder').click(function () {
 			return new Promise((resolve, error) => {
 				$.ajax({
 					method: 'POST',
-					url: route('atriatech.media.newFolder'),
+					url: mediaRoute('atriatech.media.newFolder'),
 					data: {
 						_token: $('meta[name="csrf-token"]').attr('content'),
 						folder: folderName,
@@ -477,7 +477,7 @@ $('#delete').click(function () {
 			return new Promise((resolve, error) => {
 				$.ajax({
 					method: 'POST',
-					url: route('atriatech.media.deleteItem'),
+					url: mediaRoute('atriatech.media.deleteItem'),
 					data: {
 						_token: $('meta[name="csrf-token"]').attr('content'),
 						items: activeItems,
@@ -520,7 +520,7 @@ $('#rename').click(function () {
 			return new Promise((resolve, error) => {
 				$.ajax({
 					method: 'POST',
-					url: route('atriatech.media.renameItem'),
+					url: mediaRoute('atriatech.media.renameItem'),
 					data: {
 						_token: $('meta[name="csrf-token"]').attr('content'),
 						item: activeItems[0],
@@ -572,7 +572,7 @@ $('#uploadForm').on('submit', function (e) {
 	e.preventDefault();
 
 	$.ajax({
-		url: route('atriatech.media.uploadFile'),
+		url: mediaRoute('atriatech.media.uploadFile'),
 		type: "POST",
 		data: new FormData(this),
 		contentType: false,
