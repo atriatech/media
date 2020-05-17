@@ -64,7 +64,7 @@ $('body').delegate('.open-media-dialog', 'click', function () {
         }
 	}
 	window.mediaManager = mediaManager;
-	window.open(route('atriatech.media.index') + '?ref=media&refId=' + id + '&accept=' + accept, '', 'height=500,width=1200');
+	window.open(mediaRoute('atriatech.media.index') + '?ref=media&refId=' + id + '&accept=' + accept, '', 'height=500,width=1200');
 });
 
 function loadMediaSelectorWithJS(id, options, noContainer = true) {
