@@ -28,9 +28,9 @@ Route::get('/js/atriatech_media_router.js', function () {
     }
 
     header('Content-Type: text/javascript');
-    echo ("let allRoutes = JSON.parse('" . json_encode($routes) . "');
+    echo ("let allMediaRoutes = JSON.parse('" . json_encode($routes) . "');
     function route(name, parameters = null) {
-        const r = allRoutes.find(x => x.name === name);
+        const r = allMediaRoutes.find(x => x.name === name);
         if (parameters) {
             let uri = r.uri;
             for (const param of Object.keys(parameters)) {
