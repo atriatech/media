@@ -610,15 +610,21 @@ $('#uploadForm').on('submit', function (e) {
             $('.mdc-linear-progress').addClass('d-none');
             $('.linear-progress-percent').addClass('d-none');
             $('#upload').removeClass('d-none');
-            $('#cancel-upload').addClass('d-none');
+			$('#cancel-upload').addClass('d-none');
             if (e.responseJSON !== undefined) {
-                if (e.responseJSON.errors.file[0]) {
+                if (e.responseJSON.errors && e.responseJSON.errors.file[0]) {
                     swalInit.fire({
                         title: 'Error',
                         text: e.responseJSON.errors.file[0],
                         icon: 'error',
                     });
-                } else {
+                } else if (e.responseJSON.message) {
+					swalInit.fire({
+                        title: 'Error',
+                        text: e.responseJSON.message,
+                        icon: 'error',
+                    });
+				} else {
                     swalInit.fire({
                         title: 'Error',
                         text: 'Something went wrong!',
