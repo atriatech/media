@@ -204,6 +204,9 @@ class MediumController extends Controller
     public function uploadFile(Request $request)
     {
         $accept = (!empty($request->input('accept')) ? $request->input('accept') : implode(',', array_values(config('atriatech_media.mime_types'))));
+        if (empty(array_intersect(explode(',', $accept), array_values(config('atriatech_media.mime_types'))))) {
+            abort(500, 'Selected file not supported.');
+        }
         $request->validate([
             'file' => 'required|max:'.$this->parseSize(ini_get('upload_max_filesize')).'|mimes:'.str_replace('.', '', $accept),
         ], [
