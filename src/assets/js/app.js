@@ -728,16 +728,13 @@ const makeid = function(length) {
     return result;
 };
 
-let looper = $.Deferred().resolve();
-
 $('#fileInput').change(function () {
     $.map(this.files, function(item, i) {
         const random = makeid(20);
         readURL(item, random);
         ajax_request(item, random);
-
-        return looper;
     });
+    $('#fileInput').val('');
 });
 
 // $('#cancel-upload').click(function() {
