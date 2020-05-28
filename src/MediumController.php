@@ -40,7 +40,7 @@ class MediumController extends Controller
         }
         $dirs = $this->getDirectories($path);
 
-        $files = Medium::whereRaw("REPLACE(path, SUBSTRING_INDEX(path, '/', -1), '') = '" . $path . "/'")->orderBy('created_at', 'desc')->get()->map(function($item) {
+        $files = Medium::whereRaw("REPLACE(path, SUBSTRING_INDEX(path, '/', -1), '') = '" . $path . "/'")->orderBy('created_at', 'desc')->orderBy('id', 'desc')->get()->map(function($item) {
             $item->visibility = $item->visibility;
             $item->size = $item->size;
             $item->basename = $item->basename;
@@ -204,7 +204,7 @@ class MediumController extends Controller
     public function uploadFile(Request $request)
     {
         $accept = (!empty($request->input('accept')) ? $request->input('accept') : implode(',', array_values(config('atriatech_media.mime_types'))));
-        if (empty(array_intersect(explode(',', $accept), array_values(config('atriatech_media.mime_types'))))) {
+        if (empty(array_intersect(explode(',', $accept), explode(',', implode(',', array_values(config('atriatech_media.mime_types'))))))) {
             abort(500, 'Selected file not supported.');
         }
         $request->validate([
@@ -237,7 +237,7 @@ class MediumController extends Controller
             $sizes = [];
             $mediaSubSizes = [];
             foreach($subSizes as $subSizeKey => $subSize) {
-                $image = Image::make($newPath . $fileName)->orientate();
+                $image = Image::make(file_get_contents($newPath . $fileName))->orientate();
                 $width = $image->width();
                 $height = $image->height();
 
@@ -300,7 +300,31 @@ class MediumController extends Controller
                     'subSizes' => $mediaSubSizes,
                 ])
             ]);
+
+            return response([
+                'id' => $media->id,
+                'path' => $media->path,
+                'mime_type' => $media->mime_type,
+                'options' => $media->options,
+                'visibility' => $media->visibility,
+                'size' => $media->size,
+                'basename' => $media->basename,
+                'created_at' => $media->created_at,
+                'updated_at' => $media->updated_at,
+            ], 200);
         }
+
+        return response([
+            'id' => $media->id,
+            'path' => $media->path,
+            'mime_type' => $media->mime_type,
+            'options' => $media->options,
+            'visibility' => $media->visibility,
+            'size' => $media->size,
+            'basename' => $media->basename,
+            'created_at' => $media->created_at,
+            'updated_at' => $media->updated_at,
+        ], 200);
     }
 
     private function rrmdir($dir) {

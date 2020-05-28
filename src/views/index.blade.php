@@ -11,11 +11,11 @@
 <body>
 <link href="{{ asset('atriatech/media/css/media.css') }}" rel="stylesheet" type="text/css"/>
 
-<form id="uploadForm" method="post">
+<div>
     <input type="hidden" name="path" value="">
     <input type="hidden" name="accept" value="{{ implode(',', array_values(config('atriatech_media.mime_types'))) }}">
-    <input type="file" name="file" id="fileInput" accept="{{ implode(',', array_values(config('atriatech_media.mime_types'))) }}" class="d-none">
-</form>
+    <input type="file" name="files[]" multiple id="fileInput" accept="{{ implode(',', array_values(config('atriatech_media.mime_types'))) }}" class="d-none">
+</div>
 
 <header class="mdc-top-app-bar app-bar" id="app-bar">
     <div class="mdc-top-app-bar__row">
@@ -83,17 +83,6 @@
             </div>
         </nav>
         <div class="media-explorer d-flex flex-row flex-wrap align-items-start justify-content-start h-auto pb-0"></div>
-        <div class="mdc-linear-progress d-none" aria-label="Upload Progress" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0">
-            <div class="mdc-linear-progress__buffering-dots"></div>
-            <div class="mdc-linear-progress__buffer"></div>
-            <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
-                <span class="mdc-linear-progress__bar-inner"></span>
-            </div>
-            <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
-                <span class="mdc-linear-progress__bar-inner"></span>
-            </div>
-        </div>
-        <div class="linear-progress-percent d-none">0%</div>
     </main>
 </div>
 

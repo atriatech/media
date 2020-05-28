@@ -3,8 +3,6 @@ import { MDCRipple } from '@material/ripple';
 import { MDCTopAppBar } from '@material/top-app-bar';
 import { MDCList } from "@material/list";
 import { MDCMenu } from '@material/menu';
-import { MDCLinearProgress } from '@material/linear-progress';
-import { MDCLinearProgressFoundation } from '@material/linear-progress/foundation';
 import Swal from 'sweetalert2'
 const { DateTime } = require('luxon');
 
@@ -49,48 +47,120 @@ const getItem = function (path) {
 	return allItems.find((x) => x.path === path);
 };
 
-const singleFile = function (item) {
-	let html = `<div class="mdc-card position-relative" data-path="${item.path}">
+const singleFile = function (item, random = '') {
+    let html = '';
+    if (item.status !== undefined) {
+        if (item.status === 'uploading') {
+            html = `<div class="mdc-card position-relative" data-token="${random}" data-uploading="true">
 				<div class="mdc-card__primary-action">`;
-	switch (true) {
-		case item.mime_type === 'directory':
-			html += `<div class="mdc-card__media mdc-card__media--square">
-						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/100-folder.svg">
+            switch (true) {
+                case item.mime_type.search('image/') !== -1:
+                    html += `<div class="mdc-card__media mdc-card__media--square">
+						<img src="${item.image}">
 					</div>`;
-			break;
-		case item.mime_type.search('image/') !== -1:
-		    let first_subSize = '';
-		    for (const key in item.options.subSizes) {
-                first_subSize = key;
-                break;
-            }
-			html += `<div class="mdc-card__media mdc-card__media--square">
-						<img src="${(item.options.subSizes !== undefined) ? item.options.subSizes[first_subSize] : item.path}">
-					</div>`;
-			break;
-		case item.mime_type.search('audio/') !== -1:
-			html += `<div class="mdc-card__media mdc-card__media--square">
+                    break;
+                case item.mime_type.search('audio/') !== -1:
+                    html += `<div class="mdc-card__media mdc-card__media--square">
 						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/043-music-file.svg">
 					</div>`;
-			break;
-		case item.mime_type.search('video/') !== -1:
-			html += `<div class="mdc-card__media mdc-card__media--square">
+                    break;
+                case item.mime_type.search('video/') !== -1:
+                    html += `<div class="mdc-card__media mdc-card__media--square">
 						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/035-file-7.svg">
 					</div>`;
-			break;
-		default:
-			html += `<div class="mdc-card__media mdc-card__media--square">
+                    break;
+                default:
+                    html += `<div class="mdc-card__media mdc-card__media--square">
 						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/050-file.svg">
 					</div>`;
-			break;
-	}
-	html += `
+                    break;
+            }
+            html += `
+					<div class="p-2">
+						<h3 class="mdc-typography mdc-typography--subtitle2 mdc-theme--on-primary">(Uploading)</h3>
+						<p class="custom-subtitle mdc-theme--on-primary">(Uploading)</p>
+					</div>
+					<div class="upload-progress-wrapper">
+					    <div class="upload-progress"></div>
+                    </div>
+				</div>
+			</div>`;
+        } else if (item.status === 'error') {
+            html = `<div class="mdc-card position-relative" data-token="${random}" data-uploading="true">
+				<div class="mdc-card__primary-action">`;
+            switch (true) {
+                case item.mime_type.search('image/') !== -1:
+                    html += `<div class="mdc-card__media mdc-card__media--square">
+						<img src="${item.image}">
+					</div>`;
+                    break;
+                case item.mime_type.search('audio/') !== -1:
+                    html += `<div class="mdc-card__media mdc-card__media--square">
+						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/043-music-file.svg">
+					</div>`;
+                    break;
+                case item.mime_type.search('video/') !== -1:
+                    html += `<div class="mdc-card__media mdc-card__media--square">
+						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/035-file-7.svg">
+					</div>`;
+                    break;
+                default:
+                    html += `<div class="mdc-card__media mdc-card__media--square">
+						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/050-file.svg">
+					</div>`;
+                    break;
+            }
+            html += `
 					<div class="p-2">
 						<h3 class="mdc-typography mdc-typography--subtitle2 mdc-theme--on-primary">${item.basename}</h3>
 						<p class="custom-subtitle mdc-theme--on-primary">${item.size || ''}</p>
 					</div>
 				</div>
 			</div>`;
+        }
+    } else {
+        html = `<div class="mdc-card position-relative" data-path="${item.path}">
+				<div class="mdc-card__primary-action">`;
+        switch (true) {
+            case item.mime_type === 'directory':
+                html += `<div class="mdc-card__media mdc-card__media--square">
+						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/100-folder.svg">
+					</div>`;
+                break;
+            case item.mime_type.search('image/') !== -1:
+                let first_subSize = '';
+                for (const key in item.options.subSizes) {
+                    first_subSize = key;
+                    break;
+                }
+                html += `<div class="mdc-card__media mdc-card__media--square">
+						<img src="${(item.options.subSizes !== undefined) ? item.options.subSizes[first_subSize] : item.path}">
+					</div>`;
+                break;
+            case item.mime_type.search('audio/') !== -1:
+                html += `<div class="mdc-card__media mdc-card__media--square">
+						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/043-music-file.svg">
+					</div>`;
+                break;
+            case item.mime_type.search('video/') !== -1:
+                html += `<div class="mdc-card__media mdc-card__media--square">
+						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/035-file-7.svg">
+					</div>`;
+                break;
+            default:
+                html += `<div class="mdc-card__media mdc-card__media--square">
+						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/050-file.svg">
+					</div>`;
+                break;
+        }
+        html += `
+					<div class="p-2">
+						<h3 class="mdc-typography mdc-typography--subtitle2 mdc-theme--on-primary">${item.basename}</h3>
+						<p class="custom-subtitle mdc-theme--on-primary">${item.size || ''}</p>
+					</div>
+				</div>
+			</div>`;
+    }
 	return html;
 };
 
@@ -240,27 +310,31 @@ const initButton = function () {
 };
 
 $('body').delegate('.media-explorer .mdc-card', 'dblclick', function () {
-	const path = $(this).attr('data-path');
-	const item = getItem(path);
+    if (!$(this).attr('data-uploading')) {
+        const path = $(this).attr('data-path');
+        const item = getItem(path);
 
-	if (item.mime_type === 'directory') {
-		getFiles(path);
-	} else {
-		const refId = getUrlParam('refId');
-        const funcNum = getUrlParam('CKEditorFuncNum');
-		if (refId !== null) {
-			if (refId) {
-				const path = $(this).attr('data-path');
-				window.opener.mediaManager(refId, path);
-				window.close();
-			}
-		} else if (funcNum !== null) {
-			window.opener.CKEDITOR.tools.callFunction(funcNum, path);
-			window.close();
-		}
-	}
+        if (item.mime_type === 'directory') {
+            getFiles(path);
+        } else {
+            const refId = getUrlParam('refId');
+            const funcNum = getUrlParam('CKEditorFuncNum');
+            if (refId !== null) {
+                if (refId) {
+                    const path = $(this).attr('data-path');
+                    window.opener.mediaManager(refId, path);
+                    window.close();
+                }
+            } else if (funcNum !== null) {
+                window.opener.CKEDITOR.tools.callFunction(funcNum, path);
+                window.close();
+            }
+        }
+    }
 }).delegate('.media-explorer .mdc-card', 'click', function () {
-	activeItem(this);
+    if (!$(this).attr('data-uploading')) {
+        activeItem(this);
+    }
 }).delegate('.breadcrumb-item a', 'click', function () {
 	const path = $(this).attr('data-path');
 	getFiles(path);
@@ -305,8 +379,6 @@ $('.main-content').click(function (e) {
 	}
 });
 
-let linearProgress = null;
-
 $(document).ready(function () {
 	initButton();
 
@@ -321,8 +393,6 @@ $(document).ready(function () {
 	// 	menu.open = true;
 	// 	return menu;
 	// });
-
-    linearProgress = new MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
 
 	getFiles();
 });
@@ -563,91 +633,113 @@ $('#rename').click(function () {
 	});
 });
 
-$('#fileInput').change(function () {
-	$('#uploadForm').trigger('submit');
-});
+function readURL(input, random) {
+    if (input) {
+        const reader = new FileReader();
 
-let xhr = null;
-$('#uploadForm').on('submit', function (e) {
-	e.preventDefault();
+        reader.onload = function(e) {
+            const item = {
+                basename: input.name,
+                image: e.target.result,
+                mime_type: input.type,
+                status: 'uploading',
+            };
+            if ($('.media-explorer').length !== 0) {
+                $('.media-explorer').prepend(singleFile(item, random));
+            } else {
+                $('.empty-folder').remove();
+                $('#main-content').find('nav').after('<div class="media-explorer d-flex flex-row flex-wrap align-items-start justify-content-start h-auto pb-0"></div>');
+                $('.media-explorer').prepend(singleFile(item, random));
+            }
+        }
 
-	$.ajax({
-		url: mediaRoute('atriatech.media.uploadFile'),
-		type: "POST",
-		data: new FormData(this),
-		contentType: false,
-		cache: false,
-		processData: false,
-		headers: {
-			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		},
-		beforeSend: function () {
-			// loader();
-			$('.mdc-linear-progress').removeClass('d-none');
-			$('.linear-progress-percent').removeClass('d-none');
-            linearProgress.progress = 0;
-            $('.linear-progress-percent').text('0%');
-            $('#upload').addClass('d-none');
-            $('#cancel-upload').removeClass('d-none');
-		},
-		success: function (data) {
-			if (data == 'invalid') {
-			} else {
-                $("#uploadForm")[0].reset();
-                getFiles(currentPath);
-                linearProgress.progress = 0;
-                $('.linear-progress-percent').text('0%');
-                $('.mdc-linear-progress').addClass('d-none');
-                $('.linear-progress-percent').addClass('d-none');
-                $('#upload').removeClass('d-none');
-                $('#cancel-upload').addClass('d-none');
-			}
-		},
-		error: function (e) {
-			$("#uploadForm")[0].reset();
-            linearProgress.progress = 0;
-            $('.linear-progress-percent').text('0%');
-            $('.mdc-linear-progress').addClass('d-none');
-            $('.linear-progress-percent').addClass('d-none');
-            $('#upload').removeClass('d-none');
-			$('#cancel-upload').addClass('d-none');
+        reader.readAsDataURL(input); // convert to base64 string
+    }
+}
+
+const ajax_request = function(item, random) {
+    const formData = new FormData();
+    formData.append('file', item);
+    formData.append('path', $('input[name="path"]').val());
+    formData.append('accept', $('input[name="accept"]').val());
+
+    let xhr = null;
+    $.ajax({
+        url: mediaRoute('atriatech.media.uploadFile'),
+        type: "POST",
+        data: formData,
+        contentType: false,
+        cache: false,
+        processData: false,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        beforeSend: function () {
+        },
+        success: function (data) {
+            if (data == 'invalid') {
+            } else {
+                $('[data-token="' + random + '"]').replaceWith(singleFile(data));
+                allItems.unshift(data);
+            }
+        },
+        error: function (e) {
+            let errorMsg = '';
             if (e.responseJSON !== undefined) {
                 if (e.responseJSON.errors && e.responseJSON.errors.file[0]) {
-                    swalInit.fire({
-                        title: 'Error',
-                        text: e.responseJSON.errors.file[0],
-                        icon: 'error',
-                    });
+                    errorMsg = e.responseJSON.errors.file[0];
                 } else if (e.responseJSON.message) {
-					swalInit.fire({
-                        title: 'Error',
-                        text: e.responseJSON.message,
-                        icon: 'error',
-                    });
-				} else {
-                    swalInit.fire({
-                        title: 'Error',
-                        text: 'Something went wrong!',
-                        icon: 'error',
-                    });
+                    errorMsg = e.responseJSON.message;
+                } else {
+                    errorMsg = 'Something went wrong!';
                 }
+            } else {
+                errorMsg = 'Something went wrong!';
             }
-		},
-		xhr: function () {
+
+            $('[data-token="' + random + '"]').replaceWith(singleFile({
+                basename: 'error',
+                mime_type: 'other',
+                size: errorMsg,
+                status: 'error',
+            }, random));
+        },
+        xhr: function () {
             xhr = new window.XMLHttpRequest();
-			xhr.upload.addEventListener("progress", function (evt) {
-				if (evt.lengthComputable) {
-					let percentComplete = evt.loaded / evt.total;
-					percentComplete = parseInt((percentComplete * 100).toString(), 10);
-                    linearProgress.progress = parseFloat((percentComplete / 100).toFixed(2));
-                    $('.linear-progress-percent').text(percentComplete + '%');
-				}
-			}, false);
-			return xhr;
-		},
-	});
+            xhr.upload.addEventListener("progress", function (evt) {
+                if (evt.lengthComputable) {
+                    let percentComplete = evt.loaded / evt.total;
+                    percentComplete = parseInt((percentComplete * 100).toString(), 10);
+                    $('[data-token="' + random + '"]').find('.upload-progress').css('width', percentComplete + '%');
+                }
+            }, false);
+            return xhr;
+        },
+    });
+};
+
+const makeid = function(length) {
+    let result           = '';
+    const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+};
+
+let looper = $.Deferred().resolve();
+
+$('#fileInput').change(function () {
+    $.map(this.files, function(item, i) {
+        const random = makeid(20);
+        readURL(item, random);
+        ajax_request(item, random);
+
+        return looper;
+    });
 });
 
-$('#cancel-upload').click(function() {
-    xhr.abort();
-});
+// $('#cancel-upload').click(function() {
+//     xhr.abort();
+// });
