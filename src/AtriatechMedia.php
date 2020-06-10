@@ -6,7 +6,7 @@ trait AtriatechMedia
 {
 	public function media()
 	{
-		return $this->morphToMany(Medium::class, 'media_item', 'medium_items', 'media_item_id', 'medium_id');
+		return $this->morphToMany(Medium::class, 'media_item', 'medium_items', 'media_item_id', 'medium_id')->withPivot('name');
 	}
 
 	public function addMedia($paths)
@@ -68,24 +68,24 @@ trait AtriatechMedia
 
 	public function getMedia()
     {
-        return $this->media()->get();
+        return $this->media;
     }
 
     public function getMedium($id = NULL)
     {
-        return (!empty($id)) ? $this->media()->find($id) : $this->media()->first();
+        return (!empty($id)) ? $this->media->where('id', $id)->first() : $this->media->first();
     }
 
     public function getMediumByName($name = NULL)
     {
         if (!empty($name)) {
             if (is_array($name)) {
-                return $this->media()->whereIn('name', $name)->get();
+                return $this->media->whereIn('pivot.name', $name);
             } else {
-                return $this->media()->wherePivot('name', '=', $name)->first();
+                return $this->media->where('pivot.name', $name)->first();
             }
         } else {
-            return $this->media()->first();
+            return $this->media->first();
         }
     }
 }
