@@ -5,6 +5,7 @@ import { MDCList } from "@material/list";
 import { MDCMenu } from '@material/menu';
 import Swal from 'sweetalert2'
 const { DateTime } = require('luxon');
+const _ = require('lodash');
 
 let allItems = [];
 let currentPath = '';
@@ -61,17 +62,17 @@ const singleFile = function (item, random = '') {
                     break;
                 case item.mime_type.search('audio/') !== -1:
                     html += `<div class="mdc-card__media mdc-card__media--square">
-						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/043-music-file.svg">
+						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}/atriatech/media/extra/icons/svg/043-music-file.svg">
 					</div>`;
                     break;
                 case item.mime_type.search('video/') !== -1:
                     html += `<div class="mdc-card__media mdc-card__media--square">
-						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/035-file-7.svg">
+						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}/atriatech/media/extra/icons/svg/035-file-7.svg">
 					</div>`;
                     break;
                 default:
                     html += `<div class="mdc-card__media mdc-card__media--square">
-						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/050-file.svg">
+						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}/atriatech/media/extra/icons/svg/050-file.svg">
 					</div>`;
                     break;
             }
@@ -96,17 +97,17 @@ const singleFile = function (item, random = '') {
                     break;
                 case item.mime_type.search('audio/') !== -1:
                     html += `<div class="mdc-card__media mdc-card__media--square">
-						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/043-music-file.svg">
+						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}/atriatech/media/extra/icons/svg/043-music-file.svg">
 					</div>`;
                     break;
                 case item.mime_type.search('video/') !== -1:
                     html += `<div class="mdc-card__media mdc-card__media--square">
-						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/035-file-7.svg">
+						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}/atriatech/media/extra/icons/svg/035-file-7.svg">
 					</div>`;
                     break;
                 default:
                     html += `<div class="mdc-card__media mdc-card__media--square">
-						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/050-file.svg">
+						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}/atriatech/media/extra/icons/svg/050-file.svg">
 					</div>`;
                     break;
             }
@@ -124,7 +125,7 @@ const singleFile = function (item, random = '') {
         switch (true) {
             case item.mime_type === 'directory':
                 html += `<div class="mdc-card__media mdc-card__media--square">
-						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/100-folder.svg">
+						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}/atriatech/media/extra/icons/svg/100-folder.svg">
 					</div>`;
                 break;
             case item.mime_type.search('image/') !== -1:
@@ -139,17 +140,17 @@ const singleFile = function (item, random = '') {
                 break;
             case item.mime_type.search('audio/') !== -1:
                 html += `<div class="mdc-card__media mdc-card__media--square">
-						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/043-music-file.svg">
+						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}/atriatech/media/extra/icons/svg/043-music-file.svg">
 					</div>`;
                 break;
             case item.mime_type.search('video/') !== -1:
                 html += `<div class="mdc-card__media mdc-card__media--square">
-						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/035-file-7.svg">
+						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}/atriatech/media/extra/icons/svg/035-file-7.svg">
 					</div>`;
                 break;
             default:
                 html += `<div class="mdc-card__media mdc-card__media--square">
-						<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/050-file.svg">
+						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}/atriatech/media/extra/icons/svg/050-file.svg">
 					</div>`;
                 break;
         }
@@ -255,12 +256,11 @@ const activeItem = function (elem) {
 };
 
 const updateItemInfo = function () {
-
 	if (activeItems.length === 1) {
 		const item = getItem(activeItems[0]);
 		switch (true) {
 			case item.mime_type === 'directory':
-				$('.selected-item .mdc-card__media').html(`<img class="type-icon" class="type-icon" src="${asset}atriatech/media/extra/icons/svg/100-folder.svg">`);
+				$('.selected-item .mdc-card__media').html(`<img class="type-icon" class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}/atriatech/media/extra/icons/svg/100-folder.svg">`);
 				break;
 			case item.mime_type.search('image/') !== -1:
                 let first_subSize = '';
@@ -271,13 +271,13 @@ const updateItemInfo = function () {
 				$('.selected-item .mdc-card__media').html(`<img src="${(item.options.subSizes !== undefined) ? item.options.subSizes[first_subSize] : item.path}">`);
 				break;
 			case item.mime_type.search('audio/') !== -1:
-				$('.selected-item .mdc-card__media').html(`<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/043-music-file.svg">`);
+				$('.selected-item .mdc-card__media').html(`<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}/atriatech/media/extra/icons/svg/043-music-file.svg">`);
 				break;
 			case item.mime_type.search('video/') !== -1:
-				$('.selected-item .mdc-card__media').html(`<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/035-file-7.svg">`);
+				$('.selected-item .mdc-card__media').html(`<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}/atriatech/media/extra/icons/svg/035-file-7.svg">`);
 				break;
 			default:
-				$('.selected-item .mdc-card__media').html(`<img class="type-icon" src="${asset}atriatech/media/extra/icons/svg/050-file.svg">`);
+				$('.selected-item .mdc-card__media').html(`<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}/atriatech/media/extra/icons/svg/050-file.svg">`);
 				break;
 		}
 

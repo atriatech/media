@@ -108,7 +108,7 @@ class MediumController extends Controller
         $item_path = [];
         foreach($request->input('items') as $item) {
             if (Storage::exists($item)) {
-                $this->rrmdir(ltrim(Storage::url($item), '/'));
+                $this->rrmdir(trim(config('atriatech_media.url_prefix'), '/') . '/' . ltrim(Storage::url($item), '/'));
             } else {
                 $media = Medium::path([['path' => $item]])->first();
                 if (!empty($media)) {
@@ -233,7 +233,7 @@ class MediumController extends Controller
         if (strpos($file->getMimeType(), 'image/') !== false) {
             $subSizes = config('atriatech_media.sub_sizes');
 
-            $newPath = ltrim(Storage::url($path), '/');
+            $newPath = trim(config('atriatech_media.url_prefix'), '/') . '/' . ltrim(Storage::url($path), '/');
             $sizes = [];
             $mediaSubSizes = [];
             foreach($subSizes as $subSizeKey => $subSize) {

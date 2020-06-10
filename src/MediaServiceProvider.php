@@ -26,12 +26,12 @@ class MediaServiceProvider extends ServiceProvider
         Blade::directive('atriatech_media', function ($file) {
             $file = trim($file, "'");
             if ($file == 'css') {
-                return '<link href="' . asset('atriatech/media/css/media-selector.css') . '" rel="stylesheet" type="text/css"/>';
+                return '<link href="' . asset(trim(config('atriatech_media.url_prefix'), '/') . '/' . 'atriatech/media/css/media-selector.css') . '" rel="stylesheet" type="text/css"/>';
             } else if ($file == 'js') {
                 return '
                 <script src="' . route('atriatech_media_router') . '"></script>
                 <script src="' . route('atriatech_media_config') . '"></script>
-                <script src="' . asset('atriatech/media/js/media-selector.js') . '"></script>';
+                <script src="' . asset(trim(config('atriatech_media.url_prefix'), '/') . '/' . 'atriatech/media/js/media-selector.js') . '"></script>';
             } else {
                 return '';
             }

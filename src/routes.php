@@ -12,7 +12,7 @@ Route::prefix('media')->name('atriatech.media.')->group(function() {
 });
 
 // Router
-Route::get('/js/atriatech_media_router.js', function () {
+Route::get('js/atriatech_media_router.js', function () {
     $routes_name = array_keys(app('router')->getRoutes()->getRoutesByName());
 
     $routes = [];
@@ -37,17 +37,21 @@ Route::get('/js/atriatech_media_router.js', function () {
                 uri = uri.replace(new RegExp(encodeURIComponent('{' + param + '}'), 'g'), parameters[param]);
                 uri = uri.replace(new RegExp(encodeURIComponent('{' + param + '?}'), 'g'), parameters[param]);
             }
-            return '/' + decodeURIComponent(uri);
+            return '" . url('/') . "' + '/' + decodeURIComponent(uri);
         } else {
-            return '/' + decodeURIComponent(r.uri);
+            return '" . url('/') . "' + '/' + decodeURIComponent(r.uri);
         }
     }");
     exit();
 })->name('atriatech_media_router');
 
 // Router
-Route::get('/js/atriatech_media_config.js', function () {
+Route::get('js/atriatech_media_config.js', function () {
     $config = config('atriatech_media');
+
+    if (empty($config['url_prefix'])) {
+        $config['url_prefix'] = '';
+    }
 
     header('Content-Type: text/javascript');
     echo ("
