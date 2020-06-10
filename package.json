@@ -14,11 +14,11 @@
         "@material/dialog": "^6.0.0",
         "@material/drawer": "^6.0.0",
         "@material/icon-button": "^6.0.0",
+        "@material/linear-progress": "^6.0.0",
         "@material/menu": "^6.0.0",
         "@material/ripple": "^6.0.0",
         "@material/textfield": "^6.0.0",
         "@material/top-app-bar": "^6.0.0",
-        "@material/linear-progress": "^6.0.0",
         "@sweetalert2/theme-dark": "^3.1.0",
         "animate.css": "^3.7.2",
         "bootstrap": "^4.4.1",
@@ -26,13 +26,14 @@
         "fs-extra": "^9.0.0",
         "jquery": "^3.5.0",
         "laravel-mix": "^5.0.4",
+        "lodash": "^4.17.15",
         "luxon": "^1.22.0",
+        "material-components-web": "^6.0.0",
         "node-sass": "^4.14.0",
         "rimraf": "^3.0.2",
         "sass": "^1.26.5",
         "sass-loader": "^8.0.2",
         "sweetalert2": "^9.7.2",
-        "vue-template-compiler": "^2.6.11",
-        "material-components-web": "^6.0.0"
+        "vue-template-compiler": "^2.6.11"
     }
 }

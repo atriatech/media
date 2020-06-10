@@ -42,6 +42,10 @@ return [
         'other' => '.pdf,.zip'
     ],
 
+    'upload_folder' => 'media',
 
-    'upload_folder' => 'media'
+    /*
+     * if you decided to remove the public path from url you should add the public path to this config.
+     */
+    'url_prefix' => ''
 ];

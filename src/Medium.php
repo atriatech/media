@@ -11,7 +11,7 @@ class Medium extends Model
 
     public function getPathAttribute($value)
     {
-        return url(Storage::url($value));
+        return url(trim(config('atriatech_media.url_prefix'), '/') . Storage::url($value));
     }
 
     public function scopePath($query, $paths = null)
@@ -19,7 +19,7 @@ class Medium extends Model
         if (!empty($paths)) {
             $newPaths = [];
             foreach($paths as $path) {
-                $newPaths[] = str_replace(url('storage'), 'public', $path['path']);
+                $newPaths[] = str_replace(url(trim(config('atriatech_media.url_prefix'), '/') . '/storage'), 'public', $path['path']);
             }
             return $query->whereIn('path', $newPaths);
         }
@@ -38,7 +38,7 @@ class Medium extends Model
         if (!empty($options['subSizes'])) {
             $subSizes = (array)$options['subSizes'];
             foreach($subSizes as $key => $subSize) {
-                $subSizes[$key] = url(Storage::url($subSize));
+                $subSizes[$key] = url(trim(config('atriatech_media.url_prefix'), '/') . Storage::url($subSize));
             }
             $newOptions['subSizes'] = $subSizes;
         }
