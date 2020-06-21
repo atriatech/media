@@ -47,5 +47,10 @@ return [
     /*
      * if you decided to remove the public path from url you should add the public path to this config.
      */
-    'url_prefix' => ''
+    'url_prefix' => '',
+
+    /*
+     * set route prefix.
+     */
+    'route_prefix' => 'media'
 ];

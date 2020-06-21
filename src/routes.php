@@ -1,7 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('media')->name('atriatech.media.')->group(function() {
+Route::prefix(config('atriatech_media.route_prefix'))->name('atriatech.media.')->group(function() {
     Route::get('/', 'Atriatech\Media\MediumController@index')->name('index');
     Route::post('/getDirectories', 'Atriatech\Media\MediumController@getDirectories')->name('getDirectories');
     Route::post('/getFiles', 'Atriatech\Media\MediumController@getFiles')->name('getFiles');
