@@ -2,6 +2,7 @@
 
 namespace Atriatech\Media;
 
+use Atriatech\Media\Helpers\MediumHelper;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -14,6 +15,9 @@ class MediaServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        app()->bind('atriatechmedia', function() {
+            return new MediumHelper;
+        });
     }
 
     /**

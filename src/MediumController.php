@@ -3,9 +3,9 @@
 namespace Atriatech\Media;
 
 use App\Http\Controllers\Controller;
+use Atriatech\Media\Facades\AtriatechMedia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
 
 class MediumController extends Controller
 {
@@ -40,15 +40,15 @@ class MediumController extends Controller
         }
         $dirs = $this->getDirectories($path);
 
-        $files = Medium::whereRaw("REPLACE(path, SUBSTRING_INDEX(path, '/', -1), '') = '" . $path . "/'")->orderBy('created_at', 'desc')->orderBy('id', 'desc')->get()->map(function($item) {
+        $files = Medium::whereRaw("REPLACE(path, SUBSTRING_INDEX(path, '/', -1), '') = '" . $path . "/'")->orderBy('created_at', 'desc')->orderBy('id', 'desc')->get()->map(function ($item) {
             $item->visibility = $item->visibility;
             $item->size = $item->size;
             $item->basename = $item->basename;
 
             return $item;
-        })->filter(function($item) use($accept) {
+        })->filter(function ($item) use ($accept) {
             if (!empty($accept)) {
-                if (in_array('.'.pathinfo($item->path, PATHINFO_EXTENSION), explode(',', $accept)) || in_array($item->mime_type, explode(',', $accept))) {
+                if (in_array('.' . pathinfo($item->path, PATHINFO_EXTENSION), explode(',', $accept)) || in_array($item->mime_type, explode(',', $accept))) {
                     return $item;
                 }
             } else {
@@ -62,7 +62,7 @@ class MediumController extends Controller
             $breadcrumb = array_merge($breadcrumb, explode('/', mb_substr($path, 7)));
         }
         $bbs = [];
-        foreach($breadcrumb as $index => $b) {
+        foreach ($breadcrumb as $index => $b) {
             if ($b == 'public') {
                 $bbs[] = ['path' => '', 'name' => 'Public'];
             } else {
@@ -106,7 +106,7 @@ class MediumController extends Controller
     public function deleteItem(Request $request)
     {
         $item_path = [];
-        foreach($request->input('items') as $item) {
+        foreach ($request->input('items') as $item) {
             if (Storage::exists($item)) {
                 $this->rrmdir(trim(config('atriatech_media.url_prefix'), '/') . '/' . ltrim(Storage::url($item), '/'));
             } else {
@@ -142,15 +142,15 @@ class MediumController extends Controller
         if (Storage::exists($item)) {
             $media = Medium::whereRaw("REPLACE(path, SUBSTRING_INDEX(path, '/', -1), '') = '" . $item . "/'")->get();
             $newPath = substr($item, 0, strpos($item, strrchr(rtrim($item, '/'), '/'))) . "/" . $newName;
-            foreach($media as $medium) {
+            foreach ($media as $medium) {
                 $medium->update([
-                    'path' => \DB::raw("CONCAT('" . $newPath . "/', SUBSTRING_INDEX(path, '/', -1))")
+                    'path' => DB::raw("CONCAT('" . $newPath . "/', SUBSTRING_INDEX(path, '/', -1))")
                 ]);
                 if (strpos($medium->mime_type, 'image/') !== false) {
                     $attributes = $medium->getAttributes();
                     $options = json_decode($attributes['options']);
                     $subSizes = (array)$options->subSizes;
-                    foreach($subSizes as $index => $subSize) {
+                    foreach ($subSizes as $index => $subSize) {
                         $newFile = $newPath . '/' . basename($subSize);
                         $subSizes[$index] = $newFile;
                     }
@@ -174,7 +174,7 @@ class MediumController extends Controller
             if (strpos($medium->mime_type, 'image/') !== false) {
                 $options = json_decode($attributes['options']);
                 $subSizes = (array)$options->subSizes;
-                foreach($subSizes as $index => $subSize) {
+                foreach ($subSizes as $index => $subSize) {
                     $newPath = str_replace(pathinfo($item, PATHINFO_FILENAME), $newName, $subSize);
                     $subSizes[$index] = $newPath;
 
@@ -190,13 +190,13 @@ class MediumController extends Controller
         }
     }
 
-    private function parseSize($size) {
+    private function parseSize($size)
+    {
         $unit = preg_replace('/[^bkmgtpezy]/i', '', $size);
         $size = preg_replace('/[^0-9\.]/', '', $size);
         if ($unit) {
             return round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
-        }
-        else {
+        } else {
             return round($size);
         }
     }
@@ -208,7 +208,7 @@ class MediumController extends Controller
             abort(500, 'Selected file not supported.');
         }
         $request->validate([
-            'file' => 'required|max:'.$this->parseSize(ini_get('upload_max_filesize')).'|mimes:'.str_replace('.', '', $accept),
+            'file' => 'required|max:' . $this->parseSize(ini_get('upload_max_filesize')) . '|mimes:' . str_replace('.', '', $accept),
         ], [
             'required' => 'You should select a file.',
             'max' => 'You Can not upload more than ' . ini_get('upload_max_filesize') . '.',
@@ -218,121 +218,16 @@ class MediumController extends Controller
         $path = $request->input('path') . '/';
         $file = $request->file('file');
 
-        $counter = 2;
-        $fileName = $file->getClientOriginalName();
-        while(Storage::exists($path . $fileName)) {
-            $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . ' (' . $counter . ').' . pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
-            $counter++;
-        }
-        $file->storeAs($path, $fileName);
-        $media = Medium::create([
-            'path' => $path . $fileName,
-            'mime_type' => $file->getMimeType(),
-        ]);
-
-        if (strpos($file->getMimeType(), 'image/') !== false) {
-            $subSizes = config('atriatech_media.sub_sizes');
-
-            $newPath = ltrim(trim(config('atriatech_media.url_prefix'), '/') . '/' . ltrim(Storage::url($path), '/'), '/');
-            $sizes = [];
-            $mediaSubSizes = [];
-            foreach($subSizes as $subSizeKey => $subSize) {
-                $image = Image::make(file_get_contents($newPath . $fileName))->orientate();
-                $width = $image->width();
-                $height = $image->height();
-
-                if ($subSize['width'] * $subSize['height'] < $width * $height) {
-                    $pathInfo = pathinfo($fileName);
-                    if ($width >= $height) {
-                        if ($subSize['crop']) {
-                            if (!in_array($subSize['width'].'x'.$subSize['height'], $sizes)) {
-                                $sizes[] = $subSize['width'] . 'x' . $subSize['height'];
-                                $image->fit($subSize['width'], $subSize['height'])->save($newPath . $pathInfo['filename'] . '-' . $subSize['width'] . 'x' . $subSize['height'] . '.' . $pathInfo['extension']);
-                                $mediaSubSizes[$subSizeKey] = $path . $pathInfo['filename'] . '-' . $subSize['width'] . 'x' . $subSize['height'] . '.' . $pathInfo['extension'];
-                            }
-                        } else {
-                            if ($subSize['width'] >= $subSize['height']) {
-                                $newHeight = round(($height / $width) * $subSize['width']);
-                                if (!in_array($subSize['width'] . 'x' . $newHeight, $sizes)) {
-                                    $sizes[] = $subSize['width'] . 'x' . $newHeight;
-                                    $image->resize($subSize['width'], $newHeight)->save($newPath . $pathInfo['filename'] . '-' . $subSize['width'] . 'x' . $newHeight . '.' . $pathInfo['extension']);
-                                    $mediaSubSizes[$subSizeKey] = $path . $pathInfo['filename'] . '-' . $subSize['width'] . 'x' . $newHeight . '.' . $pathInfo['extension'];
-                                }
-                            } else {
-                                $newWidth = round(($width / $height) * $subSize['height']);
-                                if (!in_array($newWidth . 'x' . $subSize['height'], $sizes)) {
-                                    $sizes[] = $newWidth . 'x' . $subSize['height'];
-                                    $image->resize($newWidth, $subSize['height'])->save($newPath . $pathInfo['filename'] . '-' . $newWidth . 'x' . $subSize['height'] . '.' . $pathInfo['extension']);
-                                    $mediaSubSizes[$subSizeKey] = $path . $pathInfo['filename'] . '-' . $newWidth . 'x' . $subSize['height'] . '.' . $pathInfo['extension'];
-                                }
-                            }
-                        }
-                    } else {
-                        if ($subSize['crop']) {
-                            if (!in_array($subSize['width'] . 'x' . $subSize['height'], $sizes)) {
-                                $sizes[] = $subSize['width'] . 'x' . $subSize['height'];
-                                $image->fit($subSize['width'], $subSize['height'])->save($newPath . $pathInfo['filename'] . '-' . $subSize['width'] . 'x' . $subSize['height'] . '.' . $pathInfo['extension']);
-                                $mediaSubSizes[$subSizeKey] = $path . $pathInfo['filename'] . '-' . $subSize['width'] . 'x' . $subSize['height'] . '.' . $pathInfo['extension'];
-                            }
-                        } else {
-                            if ($subSize['height'] >= $subSize['width']) {
-                                $newWidth = round(($width / $height) * $subSize['height']);
-                                if (!in_array($newWidth . 'x' . $subSize['height'], $sizes)) {
-                                    $sizes[] = $newWidth . 'x' . $subSize['height'];
-                                    $image->resize($newWidth, $subSize['height'])->save($newPath . $pathInfo['filename'] . '-' . $newWidth . 'x' . $subSize['height'] . '.' . $pathInfo['extension']);
-                                    $mediaSubSizes[$subSizeKey] = $path . $pathInfo['filename'] . '-' . $newWidth . 'x' . $subSize['height'] . '.' . $pathInfo['extension'];
-                                }
-                            } else {
-                                $newHeight = round(($height / $width) * $subSize['width']);
-                                if (!in_array($subSize['width'] . 'x' . $newHeight, $sizes)) {
-                                    $sizes[] = $subSize['width'] . 'x' . $newHeight;
-                                    $image->resize($subSize['width'], $newHeight)->save($newPath . $pathInfo['filename'] . '-' . $subSize['width'] . 'x' . $newHeight . '.' . $pathInfo['extension']);
-                                    $mediaSubSizes[$subSizeKey] = $path . $pathInfo['filename'] . '-' . $subSize['width'] . 'x' . $newHeight . '.' . $pathInfo['extension'];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            $media->update([
-                'options' => json_encode([
-                    'subSizes' => $mediaSubSizes,
-                ])
-            ]);
-
-            return response([
-                'id' => $media->id,
-                'path' => $media->path,
-                'mime_type' => $media->mime_type,
-                'options' => $media->options,
-                'visibility' => $media->visibility,
-                'size' => $media->size,
-                'basename' => $media->basename,
-                'created_at' => $media->created_at,
-                'updated_at' => $media->updated_at,
-            ], 200);
-        }
-
-        return response([
-            'id' => $media->id,
-            'path' => $media->path,
-            'mime_type' => $media->mime_type,
-            'options' => $media->options,
-            'visibility' => $media->visibility,
-            'size' => $media->size,
-            'basename' => $media->basename,
-            'created_at' => $media->created_at,
-            'updated_at' => $media->updated_at,
-        ], 200);
+        return response(AtriatechMedia::upload($file, $path), 200);
     }
 
-    private function rrmdir($dir) {
+    private function rrmdir($dir)
+    {
         if (is_dir($dir)) {
             $objects = scandir($dir);
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
-                    if (is_dir($dir. '/' .$object) && !is_link($dir."/".$object)) {
+                    if (is_dir($dir . '/' . $object) && !is_link($dir . "/" . $object)) {
                         $this->rrmdir($dir . '/' . $object);
                     } else {
                         Medium::where('path', 'public' . mb_substr(ltrim($dir . '/' . $object, './'), 7))->delete();
