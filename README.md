@@ -8,11 +8,12 @@ You can use this package to upload your media and attach the media to your model
 
 1. `composer require atriatech/media`.
 2. add `Atriatech\Media\MediaServiceProvider::class` to `providers` array inside `config/app.php`.
-3. add `"Atriatech\\Media\\": "vendor/atriatech/media/src/"` to `autoload => psr-4` object inside `composer.json` file, then run this command: `composer dump-autoload`.
-4. If you haven't link your storage, please run this command `php artisan storage:link`.
-5. run `php artisan vendor:publish --tag=atriatech-media-config` to copy the config file into `config` folder.
-6. run `php artisan vendor:publish --tag=atriatech-media-public` to copy asset files into `public` folder, running this command with `--force` flag is recommended.
-7. run `php artisan migrate` to create the tables.
+3. add `'AtriatechMedia' => Atriatech\Media\Facades\AtriatechMedia::class` to `aliases` array inside `config/app.php`.
+4. add `"Atriatech\\Media\\": "vendor/atriatech/media/src/"` to `autoload => psr-4` object inside `composer.json` file, then run this command: `composer dump-autoload`.
+5. If you haven't link your storage, please run this command `php artisan storage:link`.
+6. run `php artisan vendor:publish --tag=atriatech-media-config` to copy the config file into `config` folder.
+7. run `php artisan vendor:publish --tag=atriatech-media-public` to copy asset files into `public` folder, running this command with `--force` flag is recommended.
+8. run `php artisan migrate` to create the tables.
 
 # API
 
@@ -89,6 +90,22 @@ The `@atriatech_media_file` directive has two parameters:
     "name": "(String)", // the key which you can get in $request object when the form submitted
     "placeholder": "(String)", // placeholder for the media selector
     "file": "(String)" // Current media path to show in media selector
+}
+```
+
+## Upload from controller
+
+To upload a file from controller simply use the `AtriatechMedia` facade.
+```php
+use Atriatech\Media\Facades\AtriatechMedia;
+
+class HomeController
+{
+    function index()
+    {
+        $file = $request->file('file');
+        AtriatechMedia::upload($file, 'path'); // path is optional
+    }
 }
 ```
 
