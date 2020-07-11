@@ -55,16 +55,24 @@ $('body').delegate('.open-media-dialog', 'click', function () {
 	} else {
 		id = $(this).attr('id');
 	}
-	let accept = Object.values(config.mime_types).join(',');
+	const accept = [];
 	if (inputOptions.accept !== undefined) {
 	    if (config.mime_types[inputOptions.accept] !== undefined) {
-		    accept = config.mime_types[inputOptions.accept];
+		    accept.push(config.mime_types[inputOptions.accept]);
         } else {
-            accept = inputOptions.accept;
+            for (const acc of inputOptions.accept.split(',')) {
+                if (config.mime_types[acc]) {
+                    accept.push(config.mime_types[acc]);
+                } else {
+                    accept.push(acc);
+                }
+            }
         }
-	}
+	} else {
+        accept.push(Object.values(config.mime_types).join(','));
+    }
 	window.mediaManager = mediaManager;
-	window.open(mediaRoute('atriatech.media.index') + '?ref=media&refId=' + id + '&accept=' + accept, '', 'height=500,width=1200');
+	window.open(mediaRoute('atriatech.media.index') + '?ref=media&refId=' + id + '&accept=' + accept.join(','), '', 'height=500,width=1200');
 });
 
 function loadMediaSelectorWithJS(id, options, noContainer = true) {
