@@ -29,7 +29,7 @@ class Medium extends Model
     public function getOptionsAttribute($value)
     {
         if (empty($value)) {
-            return [];
+            return (object)[];
         }
 
         $options = (array)json_decode($value);
