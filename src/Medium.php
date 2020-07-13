@@ -43,7 +43,7 @@ class Medium extends Model
             $newOptions['subSizes'] = $subSizes;
         }
 
-        return $newOptions;
+        return (object)$newOptions;
     }
 
     public function getVisibilityAttribute()
