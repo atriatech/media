@@ -43,7 +43,7 @@ class Medium extends Model
             $newOptions['subSizes'] = $subSizes;
         }
 
-        return (object)$newOptions;
+        return json_decode(json_encode($newOptions));
     }
 
     public function getVisibilityAttribute()
@@ -63,7 +63,7 @@ class Medium extends Model
 
     public function getSubSize($key)
     {
-        return (!empty($this->options) && !empty($this->options['subSizes']) && !empty($this->options['subSizes'][$key])) ? $this->options['subSizes'][$key] : '';
+        return (!empty($this->options) && !empty($this->options->subSizes) && !empty($this->options->subSizes->$key)) ? $this->options->subSizes->$key : '';
     }
 
     private function formatSizeUnits($bytes)
