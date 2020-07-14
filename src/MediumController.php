@@ -35,13 +35,15 @@ class MediumController extends Controller
     public function getFiles(Request $request)
     {
         $path = $request->input('path');
+        $limit = $request->input('limit');
+        $offset = $request->input('offset');
         $accept = $request->input('accept');
         if (empty($path)) {
             $path = 'public/' . config('atriatech_media.upload_folder');
         }
         $dirs = $this->getDirectories($path);
 
-        $files = Medium::whereRaw("REPLACE(path, SUBSTRING_INDEX(path, '/', -1), '') = '" . $path . "/'")->orderBy('created_at', 'desc')->orderBy('id', 'desc')->get()->map(function ($item) {
+        $files = Medium::whereRaw("REPLACE(path, SUBSTRING_INDEX(path, '/', -1), '') = '" . $path . "/'")->limit($limit)->offset($offset)->orderBy('created_at', 'desc')->orderBy('id', 'desc')->get()->map(function ($item) {
             $item->visibility = $item->visibility;
             $item->size = $item->size;
             $item->basename = $item->basename;
@@ -61,21 +63,21 @@ class MediumController extends Controller
         $breadcrumb = [];
         if (!empty($path)) {
             $breadcrumb = array_merge($breadcrumb, explode('/', mb_substr($path, 7)));
-        }
+		}
         $bbs = [];
         foreach ($breadcrumb as $index => $b) {
             if ($b == 'public') {
                 $bbs[] = ['path' => '', 'name' => 'Public'];
             } else {
                 $bb = $breadcrumb;
-                $bb = array_splice($bb, 1, $index);
+				$bb = array_splice($bb, 1, $index);
                 $c_path = implode('/', $bb);
                 $bbs[] = ['path' => $c_path, 'name' => $b];
             }
-        }
+		}
 
         return [
-            'files' => array_merge($dirs, (!empty($files[0])) ? $files : []),
+            'files' => ($offset == 0) ? (array_merge($dirs, (!empty($files[0])) ? $files : [])) : ((!empty($files[0])) ? $files : []),
             'breadcrumb' => $bbs
         ];
     }
@@ -109,7 +111,7 @@ class MediumController extends Controller
         $item_path = [];
         foreach ($request->input('items') as $item) {
             if (Storage::exists($item)) {
-                $this->rrmdir(trim(config('atriatech_media.url_prefix'), '/') . '/' . ltrim(Storage::url($item), '/'));
+                $this->rrmdir(((!empty(config('atriatech_media.url_prefix'))) ? trim(config('atriatech_media.url_prefix'), '/') . '/' : '') . ltrim(Storage::url($item), '/'));
             } else {
                 $media = Medium::path([['path' => $item]])->first();
                 if (!empty($media)) {
