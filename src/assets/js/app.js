@@ -234,7 +234,7 @@ const getFiles = function (path = null, limit = null, offset = null) {
 			accept: ((getUrlParam('accept') !== undefined) ? getUrlParam('accept') : config.accept)
 		},
 		success: function (data) {
-			if (data.files.length < listLimit) {
+			if (data.files.filter(x => x.mime_type !== 'directory').length < listLimit) {
 				listFinished = true;
 			} else {
 				listFinished = false;
@@ -695,7 +695,7 @@ function readURL(input, random) {
 				status: 'uploading',
 			};
 			if ($('.media-explorer').length !== 0) {
-				$('.media-explorer').prepend(singleFile(item, random));
+				$('.media-explorer').find(`.mdc-card:eq(${allItems.filter(x => x.mime_type === 'directory').length - 1})`).after(singleFile(item, random));
 			} else {
 				$('.empty-folder').remove();
 				$('#main-content').find('nav').after('<div class="media-explorer d-flex flex-row flex-wrap align-items-start justify-content-start h-auto pb-0"></div>');
