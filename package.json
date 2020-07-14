@@ -24,6 +24,7 @@
         "bootstrap": "^4.4.1",
         "cross-env": "^7.0.2",
         "fs-extra": "^9.0.0",
+        "infinite-scroll": "^3.0.6",
         "jquery": "^3.5.0",
         "laravel-mix": "^5.0.4",
         "lodash": "^4.17.15",
@@ -35,5 +36,6 @@
         "sass-loader": "^8.0.2",
         "sweetalert2": "^9.7.2",
         "vue-template-compiler": "^2.6.11"
-    }
+    },
+    "dependencies": {}
 }

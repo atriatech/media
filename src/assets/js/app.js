@@ -11,6 +11,9 @@ let allItems = [];
 let currentPath = '';
 let activeItems = [];
 let ctrlIsPressed = false;
+let listLimit = 40;
+let listOffset = 0;
+let listFinished = false;
 
 const getUrlParam = function (paramName) {
 	const reParam = new RegExp('(?:[\?&]|&)' + paramName + '=([^&]+)', 'i');
@@ -49,119 +52,119 @@ const getItem = function (path) {
 };
 
 const singleFile = function (item, random = '') {
-    let html = '';
-    if (item.status !== undefined) {
-        if (item.status === 'uploading') {
-            html = `<div class="mdc-card position-relative" data-token="${random}" data-uploading="true">
+	let html = '';
+	if (item.status !== undefined) {
+		if (item.status === 'uploading') {
+			html = `<div class="mdc-card position-relative" data-token="${random}" data-uploading="true">
 				<div class="mdc-card__primary-action">`;
-            switch (true) {
-                case item.mime_type.search('image/') !== -1:
-                    html += `<div class="mdc-card__media mdc-card__media--square">
+			switch (true) {
+				case item.mime_type.search('image/') !== -1:
+					html += `<div class="mdc-card__media mdc-card__media--square">
 						<img src="${item.image}">
 					</div>`;
-                    break;
-                case item.mime_type.search('audio/') !== -1:
-                    html += `<div class="mdc-card__media mdc-card__media--square">
+					break;
+				case item.mime_type.search('audio/') !== -1:
+					html += `<div class="mdc-card__media mdc-card__media--square">
 						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}atriatech/media/extra/icons/svg/043-music-file.svg">
 					</div>`;
-                    break;
-                case item.mime_type.search('video/') !== -1:
-                    html += `<div class="mdc-card__media mdc-card__media--square">
+					break;
+				case item.mime_type.search('video/') !== -1:
+					html += `<div class="mdc-card__media mdc-card__media--square">
 						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}atriatech/media/extra/icons/svg/035-file-7.svg">
 					</div>`;
-                    break;
-                default:
-                    html += `<div class="mdc-card__media mdc-card__media--square">
+					break;
+				default:
+					html += `<div class="mdc-card__media mdc-card__media--square">
 						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}atriatech/media/extra/icons/svg/050-file.svg">
 					</div>`;
-                    break;
-            }
-            html += `
+					break;
+			}
+			html += `
 					<div class="p-2">
 						<h3 class="mdc-typography mdc-typography--subtitle2 mdc-theme--on-primary">(Uploading)</h3>
 						<p class="custom-subtitle mdc-theme--on-primary">(Uploading)</p>
 					</div>
 					<div class="upload-progress-wrapper">
-					    <div class="upload-progress"></div>
-                    </div>
+						<div class="upload-progress"></div>
+					</div>
 				</div>
 			</div>`;
-        } else if (item.status === 'error') {
-            html = `<div class="mdc-card position-relative" data-token="${random}" data-uploading="true">
+		} else if (item.status === 'error') {
+			html = `<div class="mdc-card position-relative" data-token="${random}" data-uploading="true">
 				<div class="mdc-card__primary-action">`;
-            switch (true) {
-                case item.mime_type.search('image/') !== -1:
-                    html += `<div class="mdc-card__media mdc-card__media--square">
+			switch (true) {
+				case item.mime_type.search('image/') !== -1:
+					html += `<div class="mdc-card__media mdc-card__media--square">
 						<img src="${item.image}">
 					</div>`;
-                    break;
-                case item.mime_type.search('audio/') !== -1:
-                    html += `<div class="mdc-card__media mdc-card__media--square">
+					break;
+				case item.mime_type.search('audio/') !== -1:
+					html += `<div class="mdc-card__media mdc-card__media--square">
 						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}atriatech/media/extra/icons/svg/043-music-file.svg">
 					</div>`;
-                    break;
-                case item.mime_type.search('video/') !== -1:
-                    html += `<div class="mdc-card__media mdc-card__media--square">
+					break;
+				case item.mime_type.search('video/') !== -1:
+					html += `<div class="mdc-card__media mdc-card__media--square">
 						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}atriatech/media/extra/icons/svg/035-file-7.svg">
 					</div>`;
-                    break;
-                default:
-                    html += `<div class="mdc-card__media mdc-card__media--square">
+					break;
+				default:
+					html += `<div class="mdc-card__media mdc-card__media--square">
 						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}atriatech/media/extra/icons/svg/050-file.svg">
 					</div>`;
-                    break;
-            }
-            html += `
+					break;
+			}
+			html += `
 					<div class="p-2">
 						<h3 class="mdc-typography mdc-typography--subtitle2 mdc-theme--on-primary">${item.basename}</h3>
 						<p class="custom-subtitle mdc-theme--on-primary">${item.size || ''}</p>
 					</div>
 				</div>
 			</div>`;
-        }
-    } else {
-        html = `<div class="mdc-card position-relative" data-path="${item.path}">
+		}
+	} else {
+		html = `<div class="mdc-card position-relative" data-path="${item.path}">
 				<div class="mdc-card__primary-action">`;
-        switch (true) {
-            case item.mime_type === 'directory':
-                html += `<div class="mdc-card__media mdc-card__media--square">
+		switch (true) {
+			case item.mime_type === 'directory':
+				html += `<div class="mdc-card__media mdc-card__media--square">
 						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}atriatech/media/extra/icons/svg/100-folder.svg">
 					</div>`;
-                break;
-            case item.mime_type.search('image/') !== -1:
-                let first_subSize = '';
-                for (const key in item.options.subSizes) {
-                    first_subSize = key;
-                    break;
-                }
-                html += `<div class="mdc-card__media mdc-card__media--square">
+				break;
+			case item.mime_type.search('image/') !== -1:
+				let first_subSize = '';
+				for (const key in item.options.subSizes) {
+					first_subSize = key;
+					break;
+				}
+				html += `<div class="mdc-card__media mdc-card__media--square">
 						<img src="${(item.options.subSizes !== undefined) ? item.options.subSizes[first_subSize] : item.path}">
 					</div>`;
-                break;
-            case item.mime_type.search('audio/') !== -1:
-                html += `<div class="mdc-card__media mdc-card__media--square">
+				break;
+			case item.mime_type.search('audio/') !== -1:
+				html += `<div class="mdc-card__media mdc-card__media--square">
 						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}atriatech/media/extra/icons/svg/043-music-file.svg">
 					</div>`;
-                break;
-            case item.mime_type.search('video/') !== -1:
-                html += `<div class="mdc-card__media mdc-card__media--square">
+				break;
+			case item.mime_type.search('video/') !== -1:
+				html += `<div class="mdc-card__media mdc-card__media--square">
 						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}atriatech/media/extra/icons/svg/035-file-7.svg">
 					</div>`;
-                break;
-            default:
-                html += `<div class="mdc-card__media mdc-card__media--square">
+				break;
+			default:
+				html += `<div class="mdc-card__media mdc-card__media--square">
 						<img class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}atriatech/media/extra/icons/svg/050-file.svg">
 					</div>`;
-                break;
-        }
-        html += `
+				break;
+		}
+		html += `
 					<div class="p-2">
 						<h3 class="mdc-typography mdc-typography--subtitle2 mdc-theme--on-primary">${item.basename}</h3>
 						<p class="custom-subtitle mdc-theme--on-primary">${item.size || ''}</p>
 					</div>
 				</div>
 			</div>`;
-    }
+	}
 	return html;
 };
 
@@ -188,11 +191,21 @@ const breadcrumb = function (breadcrumb) {
 	});
 };
 
-const getFiles = function (path = null) {
-    $('input[name="accept"]').val(getUrlParam('accept'));
-    $('#fileInput').attr('accept', getUrlParam('accept'));
+const getFiles = function (path = null, limit = null, offset = null) {
+	if (listFinished) {
+		return false;
+	}
+
+	$('input[name="accept"]').val(getUrlParam('accept'));
+	$('#fileInput').attr('accept', getUrlParam('accept'));
 	if (path === null || path === '') {
 		path = 'public/' + config.upload_folder;
+	}
+	if (limit === null) {
+		limit = 40;
+	}
+	if (offset === null) {
+		offset = 0;
 	}
 	currentPath = path;
 	$('input[name="path"]').val(currentPath);
@@ -216,23 +229,37 @@ const getFiles = function (path = null) {
 		},
 		data: {
 			path: path,
+			limit,
+			offset,
 			accept: ((getUrlParam('accept') !== undefined) ? getUrlParam('accept') : config.accept)
 		},
 		success: function (data) {
-			allItems = data.files;
+			if (data.files.length < listLimit) {
+				listFinished = true;
+			} else {
+				listFinished = false;
+				listOffset += listLimit;
+			}
 			const mediaContent = $('#main-content');
-			$('.media-explorer').remove();
-			$('.empty-folder').remove();
+			if (offset === 0) {
+				allItems = data.files;
+				$('.media-explorer').remove();
+				$('.empty-folder').remove();
+			} else {
+				allItems = _.concat(allItems, data.files);
+			}
 			if (allItems.length !== 0) {
-				mediaContent.find('nav').after('<div class="media-explorer d-flex flex-row flex-wrap align-items-start justify-content-start h-auto pb-0"></div>');
-				allItems.map((item) => {
+				if (offset === 0) {
+					mediaContent.find('nav').after('<div class="media-explorer d-flex flex-row flex-wrap align-items-start justify-content-start h-auto pb-0"></div>');
+				}
+				data.files.map((item) => {
 					$('.media-explorer').append(singleFile(item));
 				});
 			} else {
 				mediaContent.find('nav').after(noItem());
 			}
 			breadcrumb(data.breadcrumb);
-            $('.data-loading').addClass('d-none');
+			$('.data-loading').addClass('d-none');
 		}
 	});
 };
@@ -263,11 +290,11 @@ const updateItemInfo = function () {
 				$('.selected-item .mdc-card__media').html(`<img class="type-icon" class="type-icon" src="${asset}${_.trim(config.url_prefix, '/')}atriatech/media/extra/icons/svg/100-folder.svg">`);
 				break;
 			case item.mime_type.search('image/') !== -1:
-                let first_subSize = '';
-                for (const key in item.options.subSizes) {
-                    first_subSize = key;
-                    break;
-                }
+				let first_subSize = '';
+				for (const key in item.options.subSizes) {
+					first_subSize = key;
+					break;
+				}
 				$('.selected-item .mdc-card__media').html(`<img src="${(item.options.subSizes !== undefined) ? item.options.subSizes[first_subSize] : item.path}">`);
 				break;
 			case item.mime_type.search('audio/') !== -1:
@@ -310,33 +337,39 @@ const initButton = function () {
 };
 
 $('body').delegate('.media-explorer .mdc-card', 'dblclick', function () {
-    if (!$(this).attr('data-uploading')) {
-        const path = $(this).attr('data-path');
-        const item = getItem(path);
+	if (!$(this).attr('data-uploading')) {
+		const path = $(this).attr('data-path');
+		const item = getItem(path);
 
-        if (item.mime_type === 'directory') {
-            getFiles(path);
-        } else {
-            const refId = getUrlParam('refId');
-            const funcNum = getUrlParam('CKEditorFuncNum');
-            if (refId !== null) {
-                if (refId) {
-                    const path = $(this).attr('data-path');
-                    window.opener.mediaManager(refId, path);
-                    window.close();
-                }
-            } else if (funcNum !== null) {
-                window.opener.CKEDITOR.tools.callFunction(funcNum, path);
-                window.close();
-            }
-        }
-    }
+		if (item.mime_type === 'directory') {
+			listFinished = false;
+			listLimit = 40;
+			listOffset = 0;
+			getFiles(path);
+		} else {
+			const refId = getUrlParam('refId');
+			const funcNum = getUrlParam('CKEditorFuncNum');
+			if (refId !== null) {
+				if (refId) {
+					const path = $(this).attr('data-path');
+					window.opener.mediaManager(refId, path);
+					window.close();
+				}
+			} else if (funcNum !== null) {
+				window.opener.CKEDITOR.tools.callFunction(funcNum, path);
+				window.close();
+			}
+		}
+	}
 }).delegate('.media-explorer .mdc-card', 'click', function () {
-    if (!$(this).attr('data-uploading')) {
-        activeItem(this);
-    }
+	if (!$(this).attr('data-uploading')) {
+		activeItem(this);
+	}
 }).delegate('.breadcrumb-item a', 'click', function () {
 	const path = $(this).attr('data-path');
+	listFinished = false;
+	listLimit = 40;
+	listOffset = 0;
 	getFiles(path);
 }).keydown(function (evt) {
 	if (evt.keyCode === 39) {
@@ -376,6 +409,14 @@ $('.main-content').click(function (e) {
 		$('.media-explorer .mdc-card').removeClass('active-item');
 		clearSelection();
 		updateActiveItems();
+	}
+});
+
+const listElm = document.querySelector('#main-content');
+
+listElm.addEventListener('scroll', function() {
+	if (listElm.scrollTop + listElm.clientHeight >= listElm.scrollHeight) {
+		getFiles(currentPath, listLimit, listOffset);
 	}
 });
 
@@ -453,6 +494,9 @@ $('#new_folder').click(function () {
 					}
 				});
 			}).then(() => {
+				listFinished = false;
+				listLimit = 40;
+				listOffset = 0;
 				getFiles(currentPath);
 			}).catch((error) => {
 				switch (error.status) {
@@ -560,6 +604,9 @@ $('#delete').click(function () {
 					}
 				});
 			}).then(() => {
+				listFinished = false;
+				listLimit = 40;
+				listOffset = 0;
 				getFiles(currentPath);
 			}).catch((error) => {
 				switch (error.status) {
@@ -604,6 +651,9 @@ $('#rename').click(function () {
 					}
 				});
 			}).then(() => {
+				listFinished = false;
+				listLimit = 40;
+				listOffset = 0;
 				getFiles(currentPath);
 			}).catch((error) => {
 				switch (error.status) {
@@ -634,107 +684,107 @@ $('#rename').click(function () {
 });
 
 function readURL(input, random) {
-    if (input) {
-        const reader = new FileReader();
+	if (input) {
+		const reader = new FileReader();
 
-        reader.onload = function(e) {
-            const item = {
-                basename: input.name,
-                image: e.target.result,
-                mime_type: input.type,
-                status: 'uploading',
-            };
-            if ($('.media-explorer').length !== 0) {
-                $('.media-explorer').prepend(singleFile(item, random));
-            } else {
-                $('.empty-folder').remove();
-                $('#main-content').find('nav').after('<div class="media-explorer d-flex flex-row flex-wrap align-items-start justify-content-start h-auto pb-0"></div>');
-                $('.media-explorer').prepend(singleFile(item, random));
-            }
-        }
+		reader.onload = function(e) {
+			const item = {
+				basename: input.name,
+				image: e.target.result,
+				mime_type: input.type,
+				status: 'uploading',
+			};
+			if ($('.media-explorer').length !== 0) {
+				$('.media-explorer').prepend(singleFile(item, random));
+			} else {
+				$('.empty-folder').remove();
+				$('#main-content').find('nav').after('<div class="media-explorer d-flex flex-row flex-wrap align-items-start justify-content-start h-auto pb-0"></div>');
+				$('.media-explorer').prepend(singleFile(item, random));
+			}
+		}
 
-        reader.readAsDataURL(input); // convert to base64 string
-    }
+		reader.readAsDataURL(input); // convert to base64 string
+	}
 }
 
 const ajax_request = function(item, random) {
-    const formData = new FormData();
-    formData.append('file', item);
-    formData.append('path', $('input[name="path"]').val());
-    formData.append('accept', $('input[name="accept"]').val());
+	const formData = new FormData();
+	formData.append('file', item);
+	formData.append('path', $('input[name="path"]').val());
+	formData.append('accept', $('input[name="accept"]').val());
 
-    let xhr = null;
-    $.ajax({
-        url: mediaRoute('atriatech.media.uploadFile'),
-        type: "POST",
-        data: formData,
-        contentType: false,
-        cache: false,
-        processData: false,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        beforeSend: function () {
-        },
-        success: function (data) {
-            if (data == 'invalid') {
-            } else {
-                $('[data-token="' + random + '"]').replaceWith(singleFile(data));
-                allItems.unshift(data);
-            }
-        },
-        error: function (e) {
-            let errorMsg = '';
-            if (e.responseJSON !== undefined) {
-                if (e.responseJSON.errors && e.responseJSON.errors.file[0]) {
-                    errorMsg = e.responseJSON.errors.file[0];
-                } else if (e.responseJSON.message) {
-                    errorMsg = e.responseJSON.message;
-                } else {
-                    errorMsg = 'Something went wrong!';
-                }
-            } else {
-                errorMsg = 'Something went wrong!';
-            }
+	let xhr = null;
+	$.ajax({
+		url: mediaRoute('atriatech.media.uploadFile'),
+		type: "POST",
+		data: formData,
+		contentType: false,
+		cache: false,
+		processData: false,
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		},
+		beforeSend: function () {
+		},
+		success: function (data) {
+			if (data == 'invalid') {
+			} else {
+				$('[data-token="' + random + '"]').replaceWith(singleFile(data));
+				allItems.unshift(data);
+			}
+		},
+		error: function (e) {
+			let errorMsg = '';
+			if (e.responseJSON !== undefined) {
+				if (e.responseJSON.errors && e.responseJSON.errors.file[0]) {
+					errorMsg = e.responseJSON.errors.file[0];
+				} else if (e.responseJSON.message) {
+					errorMsg = e.responseJSON.message;
+				} else {
+					errorMsg = 'Something went wrong!';
+				}
+			} else {
+				errorMsg = 'Something went wrong!';
+			}
 
-            $('[data-token="' + random + '"]').replaceWith(singleFile({
-                basename: 'error',
-                mime_type: 'other',
-                size: errorMsg,
-                status: 'error',
-            }, random));
-        },
-        xhr: function () {
-            xhr = new window.XMLHttpRequest();
-            xhr.upload.addEventListener("progress", function (evt) {
-                if (evt.lengthComputable) {
-                    let percentComplete = evt.loaded / evt.total;
-                    percentComplete = parseInt((percentComplete * 100).toString(), 10);
-                    $('[data-token="' + random + '"]').find('.upload-progress').css('width', percentComplete + '%');
-                }
-            }, false);
-            return xhr;
-        },
-    });
+			$('[data-token="' + random + '"]').replaceWith(singleFile({
+				basename: 'error',
+				mime_type: 'other',
+				size: errorMsg,
+				status: 'error',
+			}, random));
+		},
+		xhr: function () {
+			xhr = new window.XMLHttpRequest();
+			xhr.upload.addEventListener("progress", function (evt) {
+				if (evt.lengthComputable) {
+					let percentComplete = evt.loaded / evt.total;
+					percentComplete = parseInt((percentComplete * 100).toString(), 10);
+					$('[data-token="' + random + '"]').find('.upload-progress').css('width', percentComplete + '%');
+				}
+			}, false);
+			return xhr;
+		},
+	});
 };
 
 const makeid = function(length) {
-    let result           = '';
-    const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    for ( let i = 0; i < length; i++ ) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
+	let result           = '';
+	const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	const charactersLength = characters.length;
+	for ( let i = 0; i < length; i++ ) {
+		result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	}
+	return result;
 };
 
 $('#fileInput').change(function () {
-    $.map(this.files, function(item, i) {
-        const random = makeid(20);
-        readURL(item, random);
-        ajax_request(item, random);
-    });
-    $('#fileInput').val('');
+	$.map(this.files, function(item, i) {
+		const random = makeid(20);
+		readURL(item, random);
+		ajax_request(item, random);
+	});
+	$('#fileInput').val('');
 });
 
 // $('#cancel-upload').click(function() {
