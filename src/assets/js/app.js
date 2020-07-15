@@ -695,7 +695,8 @@ function readURL(input, random) {
 				status: 'uploading',
 			};
 			if ($('.media-explorer').length !== 0) {
-				$('.media-explorer').find(`.mdc-card:eq(${allItems.filter(x => x.mime_type === 'directory').length - 1})`).after(singleFile(item, random));
+				const eq = allItems.filter(x => x.mime_type === 'directory').length;
+				$('.media-explorer').find(`.mdc-card:eq(${(eq === 0) ? 0 : eq - 1})`).after(singleFile(item, random));
 			} else {
 				$('.empty-folder').remove();
 				$('#main-content').find('nav').after('<div class="media-explorer d-flex flex-row flex-wrap align-items-start justify-content-start h-auto pb-0"></div>');
