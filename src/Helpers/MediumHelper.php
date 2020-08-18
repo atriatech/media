@@ -26,7 +26,7 @@ class MediumHelper {
         if (strpos($file->getMimeType(), 'image/') !== false) {
             $subSizes = config('atriatech_media.sub_sizes');
 
-            $newPath = ltrim(trim(config('atriatech_media.url_prefix'), '/') . '/' . ltrim(Storage::url($path), '/'), '/');
+            $newPath = __DIR__ . '/../../../../../public/' . ltrim(trim(config('atriatech_media.url_prefix'), '/') . '/' . ltrim(Storage::url($path), '/'), '/');
             $sizes = [];
             $mediaSubSizes = [];
             foreach ($subSizes as $subSizeKey => $subSize) {
