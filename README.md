@@ -130,3 +130,22 @@ AtriatechMedia.loadMediaSelectorWithJS('mp3', {name: 'mp3', placeholder: 'MP3', 
 ```
 
 The parameters of `loadMediaSelectorWithJS` method are exactly like `@atriatech_media_file` directive. It only has a third parameter that get `true` or `false`. you should pass `false` if you want to add that `div` element outside the media selector blade directives.
+
+## Integrations
+
+### CKEditor
+
+In your view add a textarea:
+
+```html
+<textarea name="editor1"></textarea>
+```
+
+Use media as CKEditor file browser:
+
+```javascript
+CKEDITOR.replace( 'editor1', {
+    filebrowserBrowseUrl: mediaRoute('atriatech.media.index'),
+    filebrowserImageBrowseUrl: mediaRoute('atriatech.media.index') + '?accept={{ config('atriatech_media.mime_types.image/*') }}',
+});
+```
