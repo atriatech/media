@@ -9,7 +9,8 @@ use Intervention\Image\Facades\Image;
 class MediumHelper {
     public static function upload($file, $path = '')
     {
-        $path = 'public/' . config('atriatech_media.upload_folder') . '/' . str_replace('public/' . config('atriatech_media.upload_folder') . '/', '', trim($path, '/')) . '/';
+        $path = 'public/' . config('atriatech_media.upload_folder') . '/' . str_replace('public/' . config('atriatech_media.upload_folder'), '', rtrim($path ,'/')) . '/////';
+		$path = rtrim($path, '/') . '/';
 
         $counter = 2;
         $fileName = $file->getClientOriginalName();
