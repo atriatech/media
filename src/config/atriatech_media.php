@@ -52,5 +52,10 @@ return [
     /*
      * set route prefix.
      */
-    'route_prefix' => 'media'
+	'route_prefix' => 'media',
+
+	/*
+	 * set middleware for media route.
+	 */
+	'middleware' => []
 ];
