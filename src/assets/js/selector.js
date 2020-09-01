@@ -80,7 +80,7 @@ function loadMediaSelectorWithJS(id, options, noContainer = true) {
     if (!noContainer) {
         html += '<div class="media-container">';
     }
-    html += '<div id="' + id + '" data-plugin="media" data-options=' + JSON.stringify(options) + '></div>';
+    html += `<div id="${id}" data-plugin="media" data-options='${JSON.stringify(options)}'></div>`;
     if (!noContainer) {
         html += '</div>';
     }
