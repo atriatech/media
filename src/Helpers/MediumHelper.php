@@ -10,9 +10,13 @@ class MediumHelper {
     public static function upload($file, $path = '')
     {
         $path = trim($path, '/');
-        $path = str_replace('public/' . config('atriatech_media.upload_folder'), '', $path);
+		$path = str_replace('public/' . trim(config('atriatech_media.upload_folder'), '/'), '', $path);
 		$path = trim($path, '/');
-		$path = 'public/' . config('atriatech_media.upload_folder') . '/' . $path . '/';
+		if (!empty($path)) {
+			$path = 'public/' . trim(config('atriatech_media.upload_folder'), '/') . '/' . $path . '/';
+		} else {
+			$path = 'public/' . trim(config('atriatech_media.upload_folder'), '/') . '/';
+		}
 
         $counter = 2;
         $fileName = $file->getClientOriginalName();
