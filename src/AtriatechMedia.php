@@ -71,6 +71,16 @@ trait AtriatechMedia
         return $this->media;
     }
 
+    public function getMediaByName($pattern = null)
+    {
+        return $this->media->filter(function($item) use ($pattern) {
+        	if (empty($pattern)) {
+        		return true;
+			}
+        	return preg_match($pattern, $item->pivot->name);
+		})->values();
+    }
+
     public function getMedium($id = NULL)
     {
         return (!empty($id)) ? $this->media->where('id', $id)->first() : $this->media->first();

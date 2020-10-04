@@ -25,6 +25,7 @@ You can use these methods on your model:
 | updateMedia | $paths - (Array) | Update media for your model | `User::findOrFail(1)->updateMedia([$request->input('image')])` |
 | removeMedia | $name - (Single-Array) | Remove media from your model | `User::findOrFail(1)->removeMedia('image')` |
 | getMedia | - | Return all the media for your model | `$media = User::findOrFail(1)->getMedia()` |
+| getMediaByName | $pattern (String) | Return all the media that has a name with the provided pattern | `$media = User::findOrFail(1)->getMediaByName('/(extra_images)/')` |
 | getMedium | $id - (Integer) | Get a single medium of your model with an id, If id is empty it will return the first medium | `$medium = User::findOrFail(1)->getMedium(2)` |
 | getMediumByName | $name - (Single-Array) | Get a single medium of your model with the name, If the name is empty it will return the first medium | `$medium = User::findOrFail(1)->getMediumByName('image')` |
 
