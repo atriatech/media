@@ -27,7 +27,7 @@ class MediaServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Blade::directive('atriatech_media', function ($file) use () {
+        Blade::directive('atriatech_media', function ($file) {
             $file = trim($file, "'");
             if ($file == 'css') {
                 return '<link href="<?php echo asset(trim(config(\'atriatech_media.url_prefix\'), \'/\') . \'/\' . \'atriatech/media/css/media-selector.css\'); ?>" rel="stylesheet" type="text/css"/>';
