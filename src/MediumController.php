@@ -76,9 +76,19 @@ class MediumController extends Controller
             }
 		}
 
+		$breadcrumb = [];
+        foreach($bbs as $index => $row) {
+        	if ($index == 0) {
+				$breadcrumb[] = $row;
+			} else {
+        		$bbs[$index]['path'] = 'public/' . config('atriatech_media.upload_folder') . '/' . $row['path'];
+				$breadcrumb[] = $bbs[$index];
+			}
+		}
+
         return [
             'files' => ($offset == 0) ? (array_merge($dirs, (!empty($files[0])) ? $files : [])) : ((!empty($files[0])) ? $files : []),
-            'breadcrumb' => $bbs
+            'breadcrumb' => $breadcrumb
         ];
     }
 
@@ -241,4 +251,54 @@ class MediumController extends Controller
             rmdir($dir);
         }
     }
+
+    public function atriatech_media_router()
+	{
+		$routes_name = array_keys(app('router')->getRoutes()->getRoutesByName());
+
+		$routes = [];
+		foreach ($routes_name as $route) {
+			$uri = app('router')->getRoutes()->getByName($route)->uri();
+
+			if (strpos($route, 'atriatech.media.') !== false) {
+				$routes[] = [
+					'name' => $route,
+					'uri' => urlencode($uri)
+				];
+			}
+		}
+
+		header('Content-Type: text/javascript');
+		echo ("let allMediaRoutes = JSON.parse('" . json_encode($routes) . "');
+			function mediaRoute(name, parameters = null) {
+				const r = allMediaRoutes.find(x => x.name === name);
+				if (parameters) {
+					let uri = r.uri;
+					for (const param of Object.keys(parameters)) {
+						uri = uri.replace(new RegExp(encodeURIComponent('{' + param + '}'), 'g'), parameters[param]);
+						uri = uri.replace(new RegExp(encodeURIComponent('{' + param + '?}'), 'g'), parameters[param]);
+					}
+					return '" . url('/') . "' + '/' + decodeURIComponent(uri);
+				} else {
+					return '" . url('/') . "' + '/' + decodeURIComponent(r.uri);
+				}
+			}");
+		exit();
+	}
+
+	public function atriatech_media_config()
+	{
+		$config = config('atriatech_media');
+
+		if (empty($config['url_prefix'])) {
+			$config['url_prefix'] = '';
+		}
+
+		header('Content-Type: text/javascript');
+		echo ("
+			const asset = '" . asset('') . "';
+			const config = JSON.parse('" . json_encode($config) . "');
+		");
+		exit();
+	}
 }
