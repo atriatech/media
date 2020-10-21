@@ -27,17 +27,15 @@ class MediaServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-    	$css_media_selector = asset(trim(config('atriatech_media.url_prefix'), '/') . '/' . 'atriatech/media/css/media-selector.css');
-    	$js_media_selector = asset(trim(config('atriatech_media.url_prefix'), '/') . '/' . 'atriatech/media/js/media-selector.js');
-        Blade::directive('atriatech_media', function ($file) use ($css_media_selector, $js_media_selector) {
+        Blade::directive('atriatech_media', function ($file) use () {
             $file = trim($file, "'");
             if ($file == 'css') {
-                return '<link href="' . $css_media_selector . '" rel="stylesheet" type="text/css"/>';
+                return '<link href="<?php echo asset(trim(config(\'atriatech_media.url_prefix\'), \'/\') . \'/\' . \'atriatech/media/css/media-selector.css\'); ?>" rel="stylesheet" type="text/css"/>';
             } else if ($file == 'js') {
                 return '
                 <script src="' . route('atriatech_media_router') . '"></script>
                 <script src="' . route('atriatech_media_config') . '"></script>
-                <script src="' . $js_media_selector . '"></script>';
+                <script src="<?php echo asset(trim(config(\'atriatech_media.url_prefix\'), \'/\') . \'/\' . \'atriatech/media/js/media-selector.js\'); ?>"></script>';
             } else {
                 return '';
             }
