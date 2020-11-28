@@ -11,6 +11,9 @@
     "require": {
         "intervention/image": "^2.5"
     },
+    "require-dev": {
+        "laravel/framework": "^6.0"
+      },
     "keywords": ["image", "media", "media-explorer", "upload", "resize"],
     "license": "MIT"
 }
