@@ -25,7 +25,7 @@ trait AtriatechMedia
                     $media[$medium->id] = ['name' => $paths[$index]['key']];
                 }
             }
-            $this->media()->attach($media);
+            $this->media()->attach(array_values($media));
 		}
 	}
 
@@ -45,7 +45,7 @@ trait AtriatechMedia
                     $media[$medium->id] = ['name' => $paths[$index]['key']];
                 }
             }
-		    $this->media()->sync($media);
+		    $this->media()->sync(array_values($media));
         }
 	}
 
