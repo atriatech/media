@@ -39,7 +39,8 @@ trait AtriatechMedia
                     $media[$medium['id']] = ['name' => $medium['key']];
                 }
             }
-		    $this->media()->sync($media);
+            $this->media()->detach($this->media->pluck('id'));
+		    $this->media()->attach($media);
         }
 	}
 
