@@ -23,7 +23,8 @@ const loadMediaSelector = function() {
 			$(item2).click(function () {
 				var options2 = $(item2).data('options');
 				$(this).prev().val('');
-				$(this).prev().prev().html(options2.placeholder);
+				$(this).prev().prev().val('');
+				$(this).prev().prev().prev().html(options2.placeholder);
 				$(this).addClass('atm-none');
 				$(this).next().addClass('atm-none').text('');
 			});
