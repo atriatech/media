@@ -18,7 +18,9 @@ trait AtriatechMedia
             }
 
             foreach ($paths as $medium) {
-                $media[$medium['id']] = ['name' => $medium['key']];
+                if (!empty($medium['id'])) {
+                    $media[$medium['id']] = ['name' => $medium['key']];
+                }
             }
             $this->media()->attach($media);
 		}
@@ -33,7 +35,9 @@ trait AtriatechMedia
             }
 
             foreach ($paths as $medium) {
-                $media[$medium['id']] = ['name' => $medium['key']];
+                if (!empty($medium['id'])) {
+                    $media[$medium['id']] = ['name' => $medium['key']];
+                }
             }
 		    $this->media()->sync($media);
         }
