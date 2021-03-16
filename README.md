@@ -4,6 +4,11 @@
 
 You can use this package to upload your media and attach the media to your models.
 
+| Version | Laravel |
+| ------- | ------- |
+| ^1.0.0 | ^6.0.0 |
+| ^2.0.0 | ^8.0.0 |
+
 # Installation
 
 1. `composer require atriatech/media`.
