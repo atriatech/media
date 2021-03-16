@@ -16,7 +16,7 @@ const loadMediaSelector = function() {
         `);
 
         if (options.file !== undefined && options.file !== '') {
-            mediaManager(id, options.file);
+            mediaManager(id, options.id, options.file);
         }
 
 		$('.media-container').find('.delete-file').each(function (index2, item2) {
