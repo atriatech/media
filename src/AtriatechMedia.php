@@ -17,13 +17,8 @@ trait AtriatechMedia
                 $paths = [$paths];
             }
 
-            $allMedia = Medium::path($paths)->get();
-
-            foreach ($allMedia as $medium) {
-                $index = array_search($medium->path, array_column($paths, 'path'));
-                if ($index !== false) {
-                    $media[$medium->id] = ['name' => $paths[$index]['key']];
-                }
+            foreach ($paths as $medium) {
+                $media[$medium['id']] = ['name' => $medium['key']];
             }
             $this->media()->attach($media);
 		}
@@ -37,13 +32,8 @@ trait AtriatechMedia
                 $paths = [$paths];
             }
 
-            $allMedia = Medium::path($paths)->get();
-
-            foreach ($allMedia as $medium) {
-                $index = array_search($medium->path, array_column($paths, 'path'));
-                if ($index !== false) {
-                    $media[$medium->id] = ['name' => $paths[$index]['key']];
-                }
+            foreach ($paths as $medium) {
+                $media[$medium['id']] = ['name' => $medium['key']];
             }
 		    $this->media()->sync($media);
         }

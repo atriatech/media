@@ -9,6 +9,7 @@ const loadMediaSelector = function() {
                 <input type="hidden" name="${options.name}[key]" value="${options.name}">
                 <div id="${id}" data-options='${JSON.stringify(options)}' class="file-viewer open-media-dialog">${options.placeholder}</div>
                 <input type="hidden" name="${options.name}[path]" value="">
+                <input type="hidden" name="${options.name}[id]" value="">
                 <div class="delete-file atm-none" data-options='${JSON.stringify(options)}'><i class="material-icons mdc-button__icon">delete</i></div>
                 <div class="file-name atm-none"></div>
             </div>
@@ -30,7 +31,7 @@ const loadMediaSelector = function() {
 	});
 };
 
-const mediaManager = function(refId, file) {
+const mediaManager = function(refId, id, file) {
     if (config.mime_types['image/*'].split(',').find((x) => x === '.' + file.split('.').pop())) {
         $('#' + refId).html('<img src="' + file + '">');
     } else if (config.mime_types['video/*'].split(',').find((x) => x === '.' + file.split('.').pop())) {
@@ -42,8 +43,9 @@ const mediaManager = function(refId, file) {
     }
 
     $('#' + refId).next().val(file);
-    $('#' + refId).next().next().removeClass('atm-none');
-    $('#' + refId).next().next().next().removeClass('atm-none').text(file.split('/').pop());
+    $('#' + refId).next().next().val(id);
+    $('#' + refId).next().next().next().removeClass('atm-none');
+    $('#' + refId).next().next().next().next().removeClass('atm-none').text(file.split('/').pop());
 };
 
 let inputOptions = {};
