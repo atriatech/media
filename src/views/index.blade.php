@@ -9,7 +9,7 @@
     <title>Media</title>
 </head>
 <body>
-<link href="{{ asset(trim(config('atriatech_media.url_prefix'), '/') . '/' . 'atriatech/media/css/media.css') }}" rel="stylesheet" type="text/css"/>
+<link href="{{ asset(trim(config('atriatech_media.url_prefix'), '/') . '/' . 'atriatech/media/css/media.css') }}?ver={{ config('atriatech_media.version') }}" rel="stylesheet" type="text/css"/>
 
 <div>
     <input type="hidden" name="path" value="">
@@ -88,6 +88,6 @@
 
 <script src="{{ route('atriatech_media_router') }}" type="text/javascript"></script>
 <script src="{{ route('atriatech_media_config') }}" type="text/javascript"></script>
-<script src="{{ asset(trim(config('atriatech_media.url_prefix'), '/') . '/' . 'atriatech/media/js/media.js') }}" type="text/javascript"></script>
+<script src="{{ asset(trim(config('atriatech_media.url_prefix'), '/') . '/' . 'atriatech/media/js/media.js') }}?ver={{ config('atriatech_media.version') }}" type="text/javascript"></script>
 </body>
 </html>
