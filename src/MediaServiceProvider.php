@@ -27,7 +27,7 @@ class MediaServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        config()->set('atriatech_media.version', '2.0.2');
+        config()->set('atriatech_media.version', '2.0.4');
         Blade::directive('atriatech_media', function ($file) {
             $file = trim($file, "'");
             if ($file == 'css') {
