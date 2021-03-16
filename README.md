@@ -75,7 +75,7 @@ In your view you have to load the css and js files and load the media selector:
     @csrf
     <!-- load the media selector -->
     @atriatech_media_start
-        @atriatech_media_file('img', '{"name": "image", "placeholder": "Image", "file": "{{ $user->getMedium()->path }}"}')
+        @atriatech_media_file('img', '{"name": "image", "placeholder": "Image", "file": ""}')
     @atriatech_media_end
     <!-- load the media selector -->
     <br>
@@ -95,7 +95,8 @@ The `@atriatech_media_file` directive has two parameters:
 {
     "name": "(String)", // the key which you can get in $request object when the form submitted
     "placeholder": "(String)", // placeholder for the media selector
-    "file": "(String)" // Current media path to show in media selector
+    "file": "(String)", // Current media path to show in media selector
+    "id": "(Number)" // Current media id
 }
 ```
 
