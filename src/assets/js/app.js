@@ -123,7 +123,7 @@ const singleFile = function (item, random = '') {
 			</div>`;
 		}
 	} else {
-		html = `<div class="mdc-card position-relative" data-path="${item.path}">
+		html = `<div class="mdc-card position-relative" data-path="${item.path}" data-id="${item.id}">
 				<div class="mdc-card__primary-action">`;
 		switch (true) {
 			case item.mime_type === 'directory':
@@ -338,6 +338,7 @@ const initButton = function () {
 
 $('body').delegate('.media-explorer .mdc-card', 'dblclick', function () {
 	if (!$(this).attr('data-uploading')) {
+		const id = $(this).attr('data-id');
 		const path = $(this).attr('data-path');
 		const item = getItem(path);
 
@@ -351,8 +352,7 @@ $('body').delegate('.media-explorer .mdc-card', 'dblclick', function () {
 			const funcNum = getUrlParam('CKEditorFuncNum');
 			if (refId !== null) {
 				if (refId) {
-					const path = $(this).attr('data-path');
-					window.opener.mediaManager(refId, path);
+					window.opener.mediaManager(refId, id, path);
 					window.close();
 				}
 			} else if (funcNum !== null) {
