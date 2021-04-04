@@ -55,7 +55,9 @@ trait AtriatechMedia
             }
         } else {
             $medium = $this->getMediumByName($name);
-            $media[] = $medium->id;
+            if (!empty($medium)) {
+                $media[] = $medium->id;
+            }
         }
 
         $this->media()->detach($media);
