@@ -73,7 +73,7 @@
 <div class="mdc-drawer-app-content mdc-top-app-bar--fixed-adjust">
     <main class="main-content" id="main-content">
         <nav>
-            <ol class="breadcrumb mb-0 mdc-theme--primary-bg">
+            <ol class="breadcrumb mb-0 mdc-theme--secondary-bg">
                 <li class="breadcrumb-item">
                     <span class="mdc-theme--on-secondary">{{ config('atriatech_media.upload_folder') }}</span>
                 </li>
