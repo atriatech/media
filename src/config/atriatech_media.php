@@ -63,5 +63,5 @@ return [
      * media URL.
      * default is url()
      */
-    'media_url' => url(),
+    'media_url' => '',
 ];
