@@ -1,7 +1,7 @@
 <?php
 
 return [
-    /*
+    /**
      * subSizes for the uploaded image.
      * if the crop option is set to false, the image will be resized keeping the aspect ration according to the width and height
      * but if the crop option is set to true, the image will be cropped with the width and height provided.
@@ -30,7 +30,7 @@ return [
         ]
     ],
 
-    /*
+    /**
      * supported mime types
      * you can add the extensions you want to each category. or add a new category
      * do not remove these default categories
@@ -44,18 +44,24 @@ return [
 
     'upload_folder' => 'media',
 
-    /*
+    /**
      * if you decided to remove the public path from url you should add the public path to this config.
      */
     'url_prefix' => '',
 
-    /*
+    /**
      * set route prefix.
      */
 	'route_prefix' => 'media',
 
-	/*
+	/**
 	 * set middleware for media route.
 	 */
-	'middleware' => []
+	'middleware' => [],
+
+    /**
+     * media URL.
+     * default is url()
+     */
+    'media_url' => url(),
 ];
