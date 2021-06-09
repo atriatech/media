@@ -20,8 +20,9 @@ class Medium extends Model
     {
         if (!empty($paths)) {
             $newPaths = [];
+            $media_url = trim((empty(config('atriatech_media.media_url'))) ? url('/') : config('atriatech_media.media_url'), '/');
             foreach($paths as $path) {
-                $newPaths[] = str_replace(url(trim(config('atriatech_media.url_prefix'), '/') . '/storage'), 'public', $path['path']);
+                $newPaths[] = str_replace($media_url . '/storage', 'public', $path['path']);
             }
             return $query->whereIn('path', $newPaths);
         }
