@@ -64,4 +64,9 @@ return [
      * default is url()
      */
     'media_url' => '',
+
+    /**
+     * medium model
+     */
+    'medium_model' => Atriatech\Media\Medium::class,
 ];
