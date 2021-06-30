@@ -2,11 +2,13 @@
 
 namespace Atriatech\Media;
 
+use Atriatech\Media\Facades\AtriatechMedia as AtriatechMediaFacade;
+
 trait AtriatechMedia
 {
 	public function media()
 	{
-		return $this->morphToMany(Medium::class, 'media_item', 'medium_items', 'media_item_id', 'medium_id')->withPivot('name');
+		return $this->morphToMany(AtriatechMediaFacade::medium_model(), 'media_item', 'medium_items', 'media_item_id', 'medium_id')->withPivot('name');
 	}
 
 	public function addMedia($paths)

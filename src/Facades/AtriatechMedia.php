@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static bool upload($file, $path = '')
+ * @method static Medium medium_model()
  */
 
 class AtriatechMedia extends Facade {

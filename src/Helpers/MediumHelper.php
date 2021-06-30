@@ -2,7 +2,6 @@
 
 namespace Atriatech\Media\Helpers;
 
-use Atriatech\Media\Medium;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
@@ -25,7 +24,7 @@ class MediumHelper {
             $counter++;
         }
         $file->storeAs($path, $fileName);
-        $media = Medium::create([
+        $media = self::medium_model()::create([
             'path' => $path . $fileName,
             'mime_type' => $file->getMimeType(),
         ]);
@@ -125,5 +124,10 @@ class MediumHelper {
             'created_at' => $media->created_at,
             'updated_at' => $media->updated_at,
         ];
+    }
+
+    public static function medium_model()
+    {
+        return config('atriatech_media.medium_model') ?? Atriatech\Media\Medium::class;
     }
 }
