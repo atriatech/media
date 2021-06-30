@@ -294,6 +294,8 @@ class MediumController extends Controller
 			$config['url_prefix'] = '';
 		}
 
+        $config['medium_model'] = '';
+
 		header('Content-Type: text/javascript');
 		echo ("
 			const asset = '" . asset('') . "';
