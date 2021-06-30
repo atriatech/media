@@ -43,7 +43,7 @@ class MediumController extends Controller
         }
         $dirs = $this->getDirectories($path);
 
-        $files = Medium::whereRaw("REPLACE(path, SUBSTRING_INDEX(path, '/', -1), '') = '" . $path . "/'")->limit($limit)->offset($offset)->orderBy('created_at', 'desc')->orderBy('id', 'desc')->get()->map(function ($item) {
+        $files = AtriatechMedia::medium_model()::whereRaw("REPLACE(path, SUBSTRING_INDEX(path, '/', -1), '') = '" . $path . "/'")->limit($limit)->offset($offset)->orderBy('created_at', 'desc')->orderBy('id', 'desc')->get()->map(function ($item) {
             $item->visibility = $item->visibility;
             $item->size = $item->size;
             $item->basename = $item->basename;
@@ -123,7 +123,7 @@ class MediumController extends Controller
             if (Storage::exists($item)) {
                 $this->rrmdir(((!empty(config('atriatech_media.url_prefix'))) ? trim(config('atriatech_media.url_prefix'), '/') . '/' : '') . ltrim(Storage::url($item), '/'));
             } else {
-                $media = Medium::path([['path' => $item]])->first();
+                $media = AtriatechMedia::medium_model()::path([['path' => $item]])->first();
                 if (!empty($media)) {
                     $attributes = $media->getAttributes();
                     $item_path[] = $attributes['path'];
@@ -153,7 +153,7 @@ class MediumController extends Controller
         $newName = $request->input('newName');
 
         if (Storage::exists($item)) {
-            $media = Medium::whereRaw("REPLACE(path, SUBSTRING_INDEX(path, '/', -1), '') = '" . $item . "/'")->get();
+            $media = AtriatechMedia::medium_model()::whereRaw("REPLACE(path, SUBSTRING_INDEX(path, '/', -1), '') = '" . $item . "/'")->get();
             $newPath = substr($item, 0, strpos($item, strrchr(rtrim($item, '/'), '/'))) . "/" . $newName;
             foreach ($media as $medium) {
                 $medium->update([
@@ -175,7 +175,7 @@ class MediumController extends Controller
             }
             Storage::move($item, $newPath);
         } else {
-            $medium = Medium::path([$item])->first();
+            $medium = AtriatechMedia::medium_model()::path([$item])->first();
 
             $attributes = $medium->getAttributes();
             $newPath = str_replace(pathinfo($attributes['path'], PATHINFO_FILENAME), $newName, $attributes['path']);
@@ -243,7 +243,7 @@ class MediumController extends Controller
                     if (is_dir($dir . '/' . $object) && !is_link($dir . "/" . $object)) {
                         $this->rrmdir($dir . '/' . $object);
                     } else {
-                        Medium::where('path', 'public' . mb_substr(ltrim($dir . '/' . $object, './'), 7))->delete();
+                        AtriatechMedia::medium_model()::where('path', 'public' . mb_substr(ltrim($dir . '/' . $object, './'), 7))->delete();
                         unlink($dir . '/' . $object);
                     }
                 }
