@@ -14,11 +14,7 @@ class CreateMediumItemsTable extends Migration
     public function up()
     {
         Schema::create('medium_items', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->charset = 'utf8';
-            $table->collation = 'utf8_general_ci';
-
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('name');
             $table->unsignedBigInteger('medium_id');
             $table->morphs('media_item');

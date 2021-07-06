@@ -50,18 +50,18 @@ class MediaServiceProvider extends ServiceProvider
         });
 
         $this->loadRoutesFrom(__DIR__.'/routes.php');
-        $this->loadMigrationsFrom(__DIR__.'/migrations');
         $this->loadViewsFrom(__DIR__.'/views', 'atriatech_media');
-//        if ($this->app->runningInConsole()) {
-//            $this->commands([
-//                AtriatechMediaCommand::class
-//            ]);
-//        }
+        
         $this->publishes([
             __DIR__.'/config' => base_path('config'),
         ], 'atriatech-media-config');
+
         $this->publishes([
             __DIR__.'/../dist' => public_path('atriatech/media'),
         ], 'atriatech-media-public');
+        
+        $this->publishes([
+            __DIR__.'/migrations' => database_path('migrations'),
+        ], 'atriatech-media-migrations');
     }
 }
