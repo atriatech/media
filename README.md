@@ -18,7 +18,8 @@ You can use this package to upload your media and attach the media to your model
 5. If you haven't link your storage, please run this command `php artisan storage:link`.
 6. run `php artisan vendor:publish --tag=atriatech-media-config` to copy the config file into `config` folder.
 7. run `php artisan vendor:publish --tag=atriatech-media-public` to copy asset files into `public` folder, running this command with `--force` flag is recommended.
-8. run `php artisan migrate` to create the tables.
+8. run `php artisan vendor:publish --tag=atriatech-media-migrations` to copy the migrations into `database/migrations` folder.
+9. run `php artisan migrate` to create the tables.
 
 # API
 
