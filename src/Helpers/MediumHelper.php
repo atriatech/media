@@ -128,6 +128,6 @@ class MediumHelper {
 
     public static function medium_model()
     {
-        return config('atriatech_media.medium_model') ?? Atriatech\Media\Medium::class;
+        return config('atriatech_media.medium_model') ?? \Atriatech\Media\Medium::class;
     }
 }
