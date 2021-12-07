@@ -298,7 +298,7 @@ class MediumController extends Controller
 
 		header('Content-Type: text/javascript');
 		echo ("
-			const asset = '" . asset('') . "';
+			const asset = '" . asset('/') . "';
 			const config = JSON.parse('" . json_encode($config) . "');
 		");
 		exit();
