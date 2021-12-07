@@ -86,8 +86,8 @@
     </main>
 </div>
 
-<script src="{{ route('atriatech_media_router') }}" type="text/javascript"></script>
-<script src="{{ route('atriatech_media_config') }}" type="text/javascript"></script>
+<script src="{{ route('atriatech_media_router') }}?ver={{ config('atriatech_media.version') }}" type="text/javascript"></script>
+<script src="{{ route('atriatech_media_config') }}?ver={{ config('atriatech_media.version') }}" type="text/javascript"></script>
 <script src="{{ asset(trim(config('atriatech_media.url_prefix'), '/') . '/' . 'atriatech/media/js/media.js') }}?ver={{ config('atriatech_media.version') }}" type="text/javascript"></script>
 </body>
 </html>
