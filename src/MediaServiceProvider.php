@@ -27,13 +27,13 @@ class MediaServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        config()->set('atriatech_media.version', '2.0.4');
+        config()->set('atriatech_media.version', '2.1.6');
         Blade::directive('atriatech_media', function ($file) {
             $file = trim($file, "'");
             if ($file == 'css') {
-                return '<?php $css_media_selector = asset(trim(config(\'atriatech_media.url_prefix\'), \'/\') . \'/\' . \'atriatech/media/css/media-selector.css\'); echo \'<link href="\' . $css_media_selector . \'?ver=\' . config(\'atriatech_media.version\') . \'" rel="stylesheet" type="text/css"/>\'; ?>';
+                return '<?php $css_media_selector = asset(trim(config(\'atriatech_media.url_prefix\'), \'/\') . \'/\' . \'atriatech/media/css/media-selector.css\'); echo \'<link href="\' . $css_media_selector . \'?ver=\' . random(10000000, 99999999) . \'" rel="stylesheet" type="text/css"/>\'; ?>';
             } else if ($file == 'js') {
-                return '<?php $js_media_selector = asset(trim(config(\'atriatech_media.url_prefix\'), \'/\') . \'/\' . \'atriatech/media/js/media-selector.js\'); echo \'<script src="\' . route(\'atriatech_media_router\') . \'"></script><script src="\' . route(\'atriatech_media_config\') . \'"></script><script src="\' . $js_media_selector . \'?ver=\' . config(\'atriatech_media.version\') . \'"></script>\'; ?>';
+                return '<?php $js_media_selector = asset(trim(config(\'atriatech_media.url_prefix\'), \'/\') . \'/\' . \'atriatech/media/js/media-selector.js\'); echo \'<script src="\' . route(\'atriatech_media_router\') . \'"></script><script src="\' . route(\'atriatech_media_config\') . \'"></script><script src="\' . $js_media_selector . \'?ver=\' . random(10000000, 99999999) . \'"></script>\'; ?>';
             } else {
                 return '';
             }
